@@ -13,5 +13,8 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files app lib`.split("\n")
   s.require_paths = ['lib']
 
+  s.signing_key   = File.expand_path '~/.gem/gem-private_key.pem'
+  s.cert_chain    = ['gem-public_cert.pem']
+
   s.add_development_dependency "cutest", "~> 1.2.0"
 end
