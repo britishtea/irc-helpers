@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.authors       = ["Jip van Reijsen"]
   s.email         = ["jipvanreijsen@gmail.com"]
   s.homepage      = "https://github.com/britishtea/irc-helpers"
+  s.license       = "MIT"
 
   s.files         = `git ls-files app lib`.split("\n")
   s.require_paths = ['lib']
