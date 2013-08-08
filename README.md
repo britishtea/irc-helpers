@@ -38,7 +38,10 @@ end
 
 ## Documentation
 
-TODO: A link to additional documentation.
+API documentation can be found here: 
+[http://britishtea.github.io/irc-helpers][documentation].
+
+[documentation]: http://britishtea.github.io/irc-helpers/frames.html#!http%3A//britishtea.github.io/irc-helpers/
 
 ## Contributing
 
