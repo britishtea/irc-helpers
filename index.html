@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.8.6.1
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'><h1>Banter</h1>
+
+<p>The IRC protocol implemented as a Ruby mixin.</p>
+
+<h2>Description</h2>
+
+<p>irc-helpers is a collection of Modules that you can include in your classes so 
+you can:</p>
+
+<ol>
+<li>Generate IRC messages: <code>privmsg &quot;#ruby&quot;, &quot;Hi #ruby!&quot; # =&gt; PRIVMSG #ruby :Hi #ruby!</code>. </li>
+<li>Look up numeric replies by constant: <code>RPL_WELCOME # =&gt; :&quot;001&quot;</code>.</li>
+</ol>
+
+<p>Convenient!</p>
+
+<h2>Installation</h2>
+
+<p><code>gem install irc-helpers</code></p>
+
+<h2>Usage</h2>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>irc/rfc2812</span><span class='tstring_end'>&quot;</span></span>
+
+<span class='kw'>class</span> <span class='const'>Bot</span>
+  <span class='id identifier rubyid_include'>include</span> <span class='const'>IRC</span><span class='op'>::</span><span class='const'>RFC2812</span><span class='op'>::</span><span class='const'>Commands</span>
+  <span class='id identifier rubyid_include'>include</span> <span class='const'>IRC</span><span class='op'>::</span><span class='const'>RFC2812</span><span class='op'>::</span><span class='const'>Constants</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_handle_message'>handle_message</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+    <span class='kw'>case</span> <span class='id identifier rubyid_message'>message</span><span class='period'>.</span><span class='id identifier rubyid_command'>command</span>
+      <span class='kw'>when</span> <span class='const'>RPL_MYINFO</span> <span class='kw'>then</span> <span class='id identifier rubyid_join'>join</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>#ruby</span><span class='tstring_end'>&quot;</span></span>
+      <span class='kw'>when</span> <span class='const'>RPL_BOUNCE</span> <span class='kw'>then</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>...</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># ...
+</span><span class='kw'>end</span>
+</code></pre>
+
+<h2>Documentation</h2>
+
+<p>TODO: A link to additional documentation.</p>
+
+<h2>Contributing</h2>
+
+<p>TODO: A contribution workflow.</p>
+
+<h2>LICENSE</h2>
+
+<p>See the LICENSE file.</p>
+</div></div>
+
+    <div id="footer">
+  Generated on Thu Aug  8 22:02:09 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.6.1 (ruby-1.9.3).
+</div>
+
+  </body>
+</html>

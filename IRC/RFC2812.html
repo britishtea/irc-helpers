@@ -1,0 +1,965 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: IRC::RFC2812
+  
+    &mdash; Documentation by YARD 0.8.6.1
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (R)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../IRC.html" title="IRC (module)">IRC</a></span></span>
+     &raquo; 
+    <span class="title">RFC2812</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: IRC::RFC2812
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/irc/rfc2812/commands.rb<span class="defines">,<br />
+  lib/irc/rfc2812/constants.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="RFC2812/Commands.html" title="IRC::RFC2812::Commands (module)">Commands</a></span>
+    
+  
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="RPL_WELCOME-constant" class="">RPL_WELCOME =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Command Responses (<a
+href="https://tools.ietf.org/html/rfc2812#section-5.1">tools.ietf.org/html/rfc2812#section-5.1</a>)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>001</span></pre></dd>
+      
+        <dt id="RPL_YOURHOST-constant" class="">RPL_YOURHOST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>002</span></pre></dd>
+      
+        <dt id="RPL_CREATED-constant" class="">RPL_CREATED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>003</span></pre></dd>
+      
+        <dt id="RPL_MYINFO-constant" class="">RPL_MYINFO =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>004</span></pre></dd>
+      
+        <dt id="RPL_BOUNCE-constant" class="">RPL_BOUNCE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>005</span></pre></dd>
+      
+        <dt id="RPL_USERHOST-constant" class="">RPL_USERHOST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>302</span></pre></dd>
+      
+        <dt id="RPL_ISON-constant" class="">RPL_ISON =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>303</span></pre></dd>
+      
+        <dt id="RPL_AWAY-constant" class="">RPL_AWAY =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>301</span></pre></dd>
+      
+        <dt id="RPL_UNAWAY-constant" class="">RPL_UNAWAY =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>305</span></pre></dd>
+      
+        <dt id="RPL_NOWAWAY-constant" class="">RPL_NOWAWAY =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>306</span></pre></dd>
+      
+        <dt id="RPL_WHOISUSER-constant" class="">RPL_WHOISUSER =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>311</span></pre></dd>
+      
+        <dt id="RPL_WHOISSERVER-constant" class="">RPL_WHOISSERVER =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>312</span></pre></dd>
+      
+        <dt id="RPL_WHOISOPERATOR-constant" class="">RPL_WHOISOPERATOR =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>313</span></pre></dd>
+      
+        <dt id="RPL_WHOISIDLE-constant" class="">RPL_WHOISIDLE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>317</span></pre></dd>
+      
+        <dt id="RPL_ENDOFWHOIS-constant" class="">RPL_ENDOFWHOIS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>318</span></pre></dd>
+      
+        <dt id="RPL_WHOISCHANNELS-constant" class="">RPL_WHOISCHANNELS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>319</span></pre></dd>
+      
+        <dt id="RPL_WHOWASUSER-constant" class="">RPL_WHOWASUSER =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>314</span></pre></dd>
+      
+        <dt id="RPL_ENDOFWHOWAS-constant" class="">RPL_ENDOFWHOWAS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>369</span></pre></dd>
+      
+        <dt id="RPL_LISTSTART-constant" class="">RPL_LISTSTART =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>321</span></pre></dd>
+      
+        <dt id="RPL_LIST-constant" class="">RPL_LIST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>322</span></pre></dd>
+      
+        <dt id="RPL_LISTEND-constant" class="">RPL_LISTEND =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>323</span></pre></dd>
+      
+        <dt id="RPL_UNIQOPIS-constant" class="">RPL_UNIQOPIS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>325</span></pre></dd>
+      
+        <dt id="RPL_CHANNELMODEIS-constant" class="">RPL_CHANNELMODEIS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>324</span></pre></dd>
+      
+        <dt id="RPL_NOTOPIC-constant" class="">RPL_NOTOPIC =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>331</span></pre></dd>
+      
+        <dt id="RPL_TOPIC-constant" class="">RPL_TOPIC =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>332</span></pre></dd>
+      
+        <dt id="RPL_INVITING-constant" class="">RPL_INVITING =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>341</span></pre></dd>
+      
+        <dt id="RPL_SUMMONING-constant" class="">RPL_SUMMONING =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>342</span></pre></dd>
+      
+        <dt id="RPL_INVITELIST-constant" class="">RPL_INVITELIST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>346</span></pre></dd>
+      
+        <dt id="RPL_ENDOFINVITELIST-constant" class="">RPL_ENDOFINVITELIST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>347</span></pre></dd>
+      
+        <dt id="RPL_EXCEPTLIST-constant" class="">RPL_EXCEPTLIST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>348</span></pre></dd>
+      
+        <dt id="RPL_ENDOFEXCEPTLIST-constant" class="">RPL_ENDOFEXCEPTLIST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>349</span></pre></dd>
+      
+        <dt id="RPL_VERSION-constant" class="">RPL_VERSION =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>351</span></pre></dd>
+      
+        <dt id="RPL_WHOREPLY-constant" class="">RPL_WHOREPLY =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>352</span></pre></dd>
+      
+        <dt id="RPL_ENDOFWHO-constant" class="">RPL_ENDOFWHO =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>315</span></pre></dd>
+      
+        <dt id="RPL_NAMREPLY-constant" class="">RPL_NAMREPLY =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>353</span></pre></dd>
+      
+        <dt id="RPL_ENDOFNAMES-constant" class="">RPL_ENDOFNAMES =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>366</span></pre></dd>
+      
+        <dt id="RPL_LINKS-constant" class="">RPL_LINKS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>364</span></pre></dd>
+      
+        <dt id="RPL_ENDOFLINKS-constant" class="">RPL_ENDOFLINKS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>365</span></pre></dd>
+      
+        <dt id="RPL_BANLIST-constant" class="">RPL_BANLIST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>367</span></pre></dd>
+      
+        <dt id="RPL_ENDOFBANLIST-constant" class="">RPL_ENDOFBANLIST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>368</span></pre></dd>
+      
+        <dt id="RPL_INFO-constant" class="">RPL_INFO =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>371</span></pre></dd>
+      
+        <dt id="RPL_ENDOFINFO-constant" class="">RPL_ENDOFINFO =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>374</span></pre></dd>
+      
+        <dt id="RPL_MOTDSTART-constant" class="">RPL_MOTDSTART =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>375</span></pre></dd>
+      
+        <dt id="RPL_MOTD-constant" class="">RPL_MOTD =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>372</span></pre></dd>
+      
+        <dt id="RPL_ENDOFMOTD-constant" class="">RPL_ENDOFMOTD =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>376</span></pre></dd>
+      
+        <dt id="RPL_YOUREOPER-constant" class="">RPL_YOUREOPER =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>381</span></pre></dd>
+      
+        <dt id="RPL_REHASHING-constant" class="">RPL_REHASHING =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>382</span></pre></dd>
+      
+        <dt id="RPL_YOURESERVICE-constant" class="">RPL_YOURESERVICE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>383</span></pre></dd>
+      
+        <dt id="RPL_TIME-constant" class="">RPL_TIME =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>391</span></pre></dd>
+      
+        <dt id="RPL_USERSSTART-constant" class="">RPL_USERSSTART =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>392</span></pre></dd>
+      
+        <dt id="RPL_USERS-constant" class="">RPL_USERS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>393</span></pre></dd>
+      
+        <dt id="RPL_ENDOFUSERS-constant" class="">RPL_ENDOFUSERS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>394</span></pre></dd>
+      
+        <dt id="RPL_NOUSERS-constant" class="">RPL_NOUSERS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>395</span></pre></dd>
+      
+        <dt id="RPL_TRACELINK-constant" class="">RPL_TRACELINK =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>200</span></pre></dd>
+      
+        <dt id="RPL_TRACECONNECTING-constant" class="">RPL_TRACECONNECTING =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>201</span></pre></dd>
+      
+        <dt id="RPL_TRACEHANDSHAKE-constant" class="">RPL_TRACEHANDSHAKE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>202</span></pre></dd>
+      
+        <dt id="RPL_TRACEUNKNOWN-constant" class="">RPL_TRACEUNKNOWN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>203</span></pre></dd>
+      
+        <dt id="RPL_TRACEOPERATOR-constant" class="">RPL_TRACEOPERATOR =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>204</span></pre></dd>
+      
+        <dt id="RPL_TRACEUSER-constant" class="">RPL_TRACEUSER =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>205</span></pre></dd>
+      
+        <dt id="RPL_TRACESERVER-constant" class="">RPL_TRACESERVER =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>206</span></pre></dd>
+      
+        <dt id="RPL_TRACESERVICE-constant" class="">RPL_TRACESERVICE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>207</span></pre></dd>
+      
+        <dt id="RPL_TRACENEWTYPE-constant" class="">RPL_TRACENEWTYPE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>208</span></pre></dd>
+      
+        <dt id="RPL_TRACECLASS-constant" class="">RPL_TRACECLASS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>209</span></pre></dd>
+      
+        <dt id="RPL_TRACERECONNECT-constant" class="">RPL_TRACERECONNECT =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>210</span></pre></dd>
+      
+        <dt id="RPL_TRACELOG-constant" class="">RPL_TRACELOG =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>261</span></pre></dd>
+      
+        <dt id="RPL_TRACEEND-constant" class="">RPL_TRACEEND =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>262</span></pre></dd>
+      
+        <dt id="RPL_STATSLINKINFO-constant" class="">RPL_STATSLINKINFO =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>211</span></pre></dd>
+      
+        <dt id="RPL_STATSCOMMANDS-constant" class="">RPL_STATSCOMMANDS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>212</span></pre></dd>
+      
+        <dt id="RPL_ENDOFSTATS-constant" class="">RPL_ENDOFSTATS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>219</span></pre></dd>
+      
+        <dt id="RPL_STATSUPTIME-constant" class="">RPL_STATSUPTIME =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>242</span></pre></dd>
+      
+        <dt id="RPL_STATSOLINE-constant" class="">RPL_STATSOLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>243</span></pre></dd>
+      
+        <dt id="RPL_UMODEIS-constant" class="">RPL_UMODEIS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>221</span></pre></dd>
+      
+        <dt id="RPL_SERVLIST-constant" class="">RPL_SERVLIST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>234</span></pre></dd>
+      
+        <dt id="RPL_SERVLISTEND-constant" class="">RPL_SERVLISTEND =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>235</span></pre></dd>
+      
+        <dt id="RPL_LUSERCLIENT-constant" class="">RPL_LUSERCLIENT =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>251</span></pre></dd>
+      
+        <dt id="RPL_LUSEROP-constant" class="">RPL_LUSEROP =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>252</span></pre></dd>
+      
+        <dt id="RPL_LUSERUNKNOWN-constant" class="">RPL_LUSERUNKNOWN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>253</span></pre></dd>
+      
+        <dt id="RPL_LUSERCHANNELS-constant" class="">RPL_LUSERCHANNELS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>254</span></pre></dd>
+      
+        <dt id="RPL_LUSERME-constant" class="">RPL_LUSERME =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>255</span></pre></dd>
+      
+        <dt id="RPL_ADMINME-constant" class="">RPL_ADMINME =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>256</span></pre></dd>
+      
+        <dt id="RPL_ADMINLOC1-constant" class="">RPL_ADMINLOC1 =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>257</span></pre></dd>
+      
+        <dt id="RPL_ADMINLOC2-constant" class="">RPL_ADMINLOC2 =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>258</span></pre></dd>
+      
+        <dt id="RPL_ADMINEMAIL-constant" class="">RPL_ADMINEMAIL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>259</span></pre></dd>
+      
+        <dt id="RPL_TRYAGAIN-constant" class="">RPL_TRYAGAIN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>263</span></pre></dd>
+      
+        <dt id="ERR_NOSUCHNICK-constant" class="">ERR_NOSUCHNICK =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Error replies (<a
+href="https://tools.ietf.org/html/rfc2812#section-5.2">tools.ietf.org/html/rfc2812#section-5.2</a>)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>401</span></pre></dd>
+      
+        <dt id="ERR_NOSUCHSERVER-constant" class="">ERR_NOSUCHSERVER =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>402</span></pre></dd>
+      
+        <dt id="ERR_NOSUCHCHANNEL-constant" class="">ERR_NOSUCHCHANNEL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>403</span></pre></dd>
+      
+        <dt id="ERR_CANNOTSENDTOCHAN-constant" class="">ERR_CANNOTSENDTOCHAN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>404</span></pre></dd>
+      
+        <dt id="ERR_TOOMANYCHANNELS-constant" class="">ERR_TOOMANYCHANNELS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>405</span></pre></dd>
+      
+        <dt id="ERR_WASNOSUCHNICK-constant" class="">ERR_WASNOSUCHNICK =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>406</span></pre></dd>
+      
+        <dt id="ERR_TOOMANYTARGETS-constant" class="">ERR_TOOMANYTARGETS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>407</span></pre></dd>
+      
+        <dt id="ERR_NOSUCHSERVICE-constant" class="">ERR_NOSUCHSERVICE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>408</span></pre></dd>
+      
+        <dt id="ERR_NOORIGIN-constant" class="">ERR_NOORIGIN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>409</span></pre></dd>
+      
+        <dt id="ERR_NORECIPIENT-constant" class="">ERR_NORECIPIENT =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>411</span></pre></dd>
+      
+        <dt id="ERR_NOTEXTTOSEND-constant" class="">ERR_NOTEXTTOSEND =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>412</span></pre></dd>
+      
+        <dt id="ERR_NOTOPLEVEL-constant" class="">ERR_NOTOPLEVEL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>413</span></pre></dd>
+      
+        <dt id="ERR_WILDTOPLEVEL-constant" class="">ERR_WILDTOPLEVEL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>414</span></pre></dd>
+      
+        <dt id="ERR_BADMASK-constant" class="">ERR_BADMASK =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>415</span></pre></dd>
+      
+        <dt id="ERR_UNKNOWNCOMMAND-constant" class="">ERR_UNKNOWNCOMMAND =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>421</span></pre></dd>
+      
+        <dt id="ERR_NOMOTD-constant" class="">ERR_NOMOTD =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>422</span></pre></dd>
+      
+        <dt id="ERR_NOADMININFO-constant" class="">ERR_NOADMININFO =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>423</span></pre></dd>
+      
+        <dt id="ERR_FILEERROR-constant" class="">ERR_FILEERROR =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>424</span></pre></dd>
+      
+        <dt id="ERR_NONICKNAMEGIVEN-constant" class="">ERR_NONICKNAMEGIVEN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>431</span></pre></dd>
+      
+        <dt id="ERR_ERRONEUSNICKNAME-constant" class="">ERR_ERRONEUSNICKNAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>432</span></pre></dd>
+      
+        <dt id="ERR_NICKNAMEINUSE-constant" class="">ERR_NICKNAMEINUSE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>433</span></pre></dd>
+      
+        <dt id="ERR_NICKCOLLISION-constant" class="">ERR_NICKCOLLISION =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>436</span></pre></dd>
+      
+        <dt id="ERR_UNAVAILRESOURCE-constant" class="">ERR_UNAVAILRESOURCE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>437</span></pre></dd>
+      
+        <dt id="ERR_USERNOTINCHANNEL-constant" class="">ERR_USERNOTINCHANNEL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>441</span></pre></dd>
+      
+        <dt id="ERR_NOTONCHANNEL-constant" class="">ERR_NOTONCHANNEL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>442</span></pre></dd>
+      
+        <dt id="ERR_USERONCHANNEL-constant" class="">ERR_USERONCHANNEL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>443</span></pre></dd>
+      
+        <dt id="ERR_NOLOGIN-constant" class="">ERR_NOLOGIN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>444</span></pre></dd>
+      
+        <dt id="ERR_SUMMONDISABLED-constant" class="">ERR_SUMMONDISABLED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>445</span></pre></dd>
+      
+        <dt id="ERR_USERSDISABLED-constant" class="">ERR_USERSDISABLED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>446</span></pre></dd>
+      
+        <dt id="ERR_NOTREGISTERED-constant" class="">ERR_NOTREGISTERED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>451</span></pre></dd>
+      
+        <dt id="ERR_NEEDMOREPARAMS-constant" class="">ERR_NEEDMOREPARAMS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>461</span></pre></dd>
+      
+        <dt id="ERR_ALREADYREGISTRED-constant" class="">ERR_ALREADYREGISTRED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>462</span></pre></dd>
+      
+        <dt id="ERR_NOPERMFORHOST-constant" class="">ERR_NOPERMFORHOST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>463</span></pre></dd>
+      
+        <dt id="ERR_PASSWDMISMATCH-constant" class="">ERR_PASSWDMISMATCH =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>464</span></pre></dd>
+      
+        <dt id="ERR_YOUREBANNEDCREEP-constant" class="">ERR_YOUREBANNEDCREEP =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>465</span></pre></dd>
+      
+        <dt id="ERR_YOUWILLBEBANNED-constant" class="">ERR_YOUWILLBEBANNED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>466</span></pre></dd>
+      
+        <dt id="ERR_KEYSET-constant" class="">ERR_KEYSET =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>467</span></pre></dd>
+      
+        <dt id="ERR_CHANNELISFULL-constant" class="">ERR_CHANNELISFULL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>471</span></pre></dd>
+      
+        <dt id="ERR_UNKNOWNMODE-constant" class="">ERR_UNKNOWNMODE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>472</span></pre></dd>
+      
+        <dt id="ERR_INVITEONLYCHAN-constant" class="">ERR_INVITEONLYCHAN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>473</span></pre></dd>
+      
+        <dt id="ERR_BANNEDFROMCHAN-constant" class="">ERR_BANNEDFROMCHAN =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>474</span></pre></dd>
+      
+        <dt id="ERR_BADCHANNELKEY-constant" class="">ERR_BADCHANNELKEY =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>475</span></pre></dd>
+      
+        <dt id="ERR_BADCHANMASK-constant" class="">ERR_BADCHANMASK =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>476</span></pre></dd>
+      
+        <dt id="ERR_NOCHANMODES-constant" class="">ERR_NOCHANMODES =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>477</span></pre></dd>
+      
+        <dt id="ERR_BANLISTFULL-constant" class="">ERR_BANLISTFULL =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>478</span></pre></dd>
+      
+        <dt id="ERR_NOPRIVILEGES-constant" class="">ERR_NOPRIVILEGES =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>481</span></pre></dd>
+      
+        <dt id="ERR_CHANOPRIVSNEEDED-constant" class="">ERR_CHANOPRIVSNEEDED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>482</span></pre></dd>
+      
+        <dt id="ERR_CANTKILLSERVER-constant" class="">ERR_CANTKILLSERVER =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>483</span></pre></dd>
+      
+        <dt id="ERR_RESTRICTED-constant" class="">ERR_RESTRICTED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>484</span></pre></dd>
+      
+        <dt id="ERR_UNIQOPPRIVSNEEDED-constant" class="">ERR_UNIQOPPRIVSNEEDED =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>485</span></pre></dd>
+      
+        <dt id="ERR_NOOPERHOST-constant" class="">ERR_NOOPERHOST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>491</span></pre></dd>
+      
+        <dt id="ERR_UMODEUNKNOWNFLAG-constant" class="">ERR_UMODEUNKNOWNFLAG =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>501</span></pre></dd>
+      
+        <dt id="ERR_USERSDONTMATCH-constant" class="">ERR_USERSDONTMATCH =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>502</span></pre></dd>
+      
+        <dt id="RPL_SERVICEINFO-constant" class="">RPL_SERVICEINFO =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Reserved numerics (<a
+href="https://tools.ietf.org/html/rfc2812#section-5.3">tools.ietf.org/html/rfc2812#section-5.3</a>)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>231</span></pre></dd>
+      
+        <dt id="RPL_ENDOFSERVICES-constant" class="">RPL_ENDOFSERVICES =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>232</span></pre></dd>
+      
+        <dt id="RPL_SERVICE-constant" class="">RPL_SERVICE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>233</span></pre></dd>
+      
+        <dt id="RPL_NONE-constant" class="">RPL_NONE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>300</span></pre></dd>
+      
+        <dt id="RPL_WHOISCHANOP-constant" class="">RPL_WHOISCHANOP =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>316</span></pre></dd>
+      
+        <dt id="RPL_KILLDONE-constant" class="">RPL_KILLDONE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>361</span></pre></dd>
+      
+        <dt id="RPL_CLOSING-constant" class="">RPL_CLOSING =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>362</span></pre></dd>
+      
+        <dt id="RPL_CLOSEEND-constant" class="">RPL_CLOSEEND =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>363</span></pre></dd>
+      
+        <dt id="RPL_INFOSTART-constant" class="">RPL_INFOSTART =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>371</span></pre></dd>
+      
+        <dt id="RPL_MYPORTIS-constant" class="">RPL_MYPORTIS =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>384</span></pre></dd>
+      
+        <dt id="RPL_STATSCLINE-constant" class="">RPL_STATSCLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>213</span></pre></dd>
+      
+        <dt id="RPL_STATSNLINE-constant" class="">RPL_STATSNLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>214</span></pre></dd>
+      
+        <dt id="RPL_STATSILINE-constant" class="">RPL_STATSILINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>215</span></pre></dd>
+      
+        <dt id="RPL_STATSKLINE-constant" class="">RPL_STATSKLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>216</span></pre></dd>
+      
+        <dt id="RPL_STATSQLINE-constant" class="">RPL_STATSQLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>217</span></pre></dd>
+      
+        <dt id="RPL_STATSYLINE-constant" class="">RPL_STATSYLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>218</span></pre></dd>
+      
+        <dt id="RPL_STATSVLINE-constant" class="">RPL_STATSVLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>240</span></pre></dd>
+      
+        <dt id="RPL_STATSLLINE-constant" class="">RPL_STATSLLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>241</span></pre></dd>
+      
+        <dt id="RPL_STATSHLINE-constant" class="">RPL_STATSHLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>244</span></pre></dd>
+      
+        <dt id="RPL_STATSSLINE-constant" class="">RPL_STATSSLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>244</span></pre></dd>
+      
+        <dt id="RPL_STATSPING-constant" class="">RPL_STATSPING =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>246</span></pre></dd>
+      
+        <dt id="RPL_STATSBLINE-constant" class="">RPL_STATSBLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>247</span></pre></dd>
+      
+        <dt id="RPL_STATSDLINE-constant" class="">RPL_STATSDLINE =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>250</span></pre></dd>
+      
+        <dt id="ERR_NOSERVICEHOST-constant" class="">ERR_NOSERVICEHOST =
+          
+        </dt>
+        <dd><pre class="code"><span class='int'>492</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+
+
+</div>
+
+    <div id="footer">
+  Generated on Thu Aug  8 22:02:09 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.6.1 (ruby-1.9.3).
+</div>
+
+  </body>
+</html>
