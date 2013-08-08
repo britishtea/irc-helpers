@@ -1,4 +1,4 @@
-# Banter
+# irc-helpers
 
 The IRC protocol implemented as a Ruby mixin.
 
