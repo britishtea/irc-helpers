@@ -32,6 +32,14 @@ class Bot
     end
   end
 
+  # You have to define #raw, which receives the IRC messages. You can just pass
+  # it trough, or do something special with it, like adding newlines.
+  #
+  # Note that some methods return an Array!
+  def raw(*messages)
+    @connection.puts messages.join "\r\n"
+  end
+
   # ...
 end
 ```
