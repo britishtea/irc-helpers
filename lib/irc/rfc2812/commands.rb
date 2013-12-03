@@ -133,15 +133,15 @@ module IRC
       #   join '#foo'
       #   join '#foo', 'key'
       #   join ['#foo', #bar], ['key_for_#foo']
-      def join(channel, key = nil)
-        channel = Array(channel).each_slice(5).to_a
-        key     = Array(key).each_slice(5).to_a
+      def join(channels, keys = nil)
+        channel = Array(channels).each_slice(5).to_a
+        key     = Array(keys).each_slice(5).to_a
         
-        channel.zip(key).map do |channels,keys|
-          channels.map! { |chan| String(chan) }
-
-          raw "JOIN #{channels.join ','} #{Array(keys).join ','}".strip
+        messages = channel.zip(key).map do |channels,keys|
+          "JOIN #{channels.map(&:to_s).join ','} #{Array(keys).join ','}".strip
         end
+
+        raw messages
       end
 
       # Public: Sends a PART command (leaves a channel).
