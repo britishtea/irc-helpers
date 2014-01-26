@@ -1,5 +1,5 @@
 require_relative "../test_helper"
-require "irc/rfc2812"
+require "irc/rfc2812/commands"
 
 setup do
   Object.new.tap do |obj| 
