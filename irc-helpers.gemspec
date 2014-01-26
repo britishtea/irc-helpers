@@ -1,5 +1,5 @@
-$:.unshift File.expand_path('../lib', __FILE__)
-require 'irc/version'
+$:.unshift File.expand_path("../lib", __FILE__)
+require "irc/version"
 
 Gem::Specification.new do |s|
   s.name          = "irc-helpers"
@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.license       = "MIT"
 
   s.files         = `git ls-files app lib`.split("\n")
-  s.require_paths = ['lib']
+  s.require_paths = ["lib"]
 
-  s.signing_key   = File.expand_path '~/.gem/gem-private_key.pem'
-  s.cert_chain    = ['gem-public_cert.pem']
+  s.signing_key   = File.expand_path "~/.gem/gem-private_key.pem"
+  s.cert_chain    = ["certs/britishtea.pem"]
 
   s.add_development_dependency "cutest", "~> 1.2.0"
 end
