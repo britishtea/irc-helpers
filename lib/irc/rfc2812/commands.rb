@@ -149,9 +149,7 @@ module IRC
       # channels - The channel name String or an Array of channel name Strings.
       # message  - A part message String (default: nil).
       def part(channels, message = nil)
-        channels = Array(channels).map { |chan| String(chan) }.join ','
-
-        raw "PART #{channels} :#{message}"
+        raw "PART #{Array(channels).map(&:to_s).join ','} :#{message}"
       end
 
       # Public: Sends a TOPIC command.
@@ -182,9 +180,7 @@ module IRC
       #
       # Returns an Array of IRC::Messages or nil.
       def names(channels = nil, target = nil)
-        channels = Array(channels).map { |chan| String(chan) }.join ','
-
-        raw "NAMES #{channels} #{target}".strip
+        raw "NAMES #{Array(channels).map(&:to_s).join ','} #{target}".strip
       end
 
       # Public: Sends a LIST command. Lists channels and their topics.
@@ -198,9 +194,7 @@ module IRC
       #   list # => requests to list all channels
       #   list ['#ruby', '#rails'] # requests to list channels #ruby and #rails
       def list(channels = nil, target = nil)
-        channels = Array(channels).map { |chan| String(chan) }.join ','
-
-        raw "LIST #{channels} #{target}".strip
+        raw "LIST #{Array(channels).map(&:to_s).join ','} #{target}".strip
       end
 
       # Public: Sends an INVITE command.
@@ -384,7 +378,7 @@ module IRC
       #   whois 'Alfredo'
       #   whois 'Alfredo', 'gibson.freenode.net'
       def whois(masks, server = nil)
-        masks = Array(masks).map { |mask| String(mask) }.join ','
+        masks = Array(masks).map(&:to_s).join ','
 
         raw server.nil? ? "WHOIS #{masks}" : "WHOIS #{server} #{masks}"
       end
@@ -401,7 +395,7 @@ module IRC
       #   whowas 'Alfredo', 8
       #   whowas ['Alfredo', 'Angel'], 2
       def whowas(nicknames, count = nil, target = nil)
-        nicknames = Array(nicknames).map { |mask| String(mask) }.join ','
+        nicknames = Array(nicknames).map(&:to_s).join ','
 
         raw "WHOWAS #{nicknames} #{count} #{target}".strip
       end
