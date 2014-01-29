@@ -2,7 +2,7 @@ require_relative "../test_helper"
 require "irc/message"
 
 class Test < IRC::Message
-  def parse(_)
+  def self.parse(*_)
     ["prefix", "COMMAND", ["one", "two", "three", "the trail"]]
   end
 end

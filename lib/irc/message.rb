@@ -2,6 +2,22 @@ module IRC
   # Public: Represents a Message. This class is intended to be subclassed. Its
   # `#parse` and `#valid?` methods are not implemented and should be redefined.
   class Message
+    # Public: Parses a raw message. It should return an Array of three elements 
+    # (prefix, command, parameters).
+    #
+    # raw_message - The raw message String.
+    #
+    # Examples
+    #
+    #   Message.parse(":prefix COMMAND parameter :the trail")
+    #   # => ["prefix", "COMMAND", ["parameter", "the trail"]]
+    #
+    # Returns an Array of three elements.
+    # Raises NotImplementedError when not implemented (default).
+    def self.parse(raw_message)
+      raise NotImplementedError, "#{self}.parse is not implemented."
+    end
+
     # Public: Gets the raw message String.
     attr_reader :raw
 
@@ -26,41 +42,23 @@ module IRC
     attr_reader :time
 
     def initialize(raw)
-      parsed   = parse raw
+      parsed   = self.class.parse raw
 
       @raw     = raw
-      @prefix  = parsed[0]
+      @prefix  = parsed[0] # TODO: Maybe store a Prefix. But how to know which one?
       @command = parsed[1].downcase.to_sym
       @params  = parsed[2]
       @trail   = parsed[2].last
       @time    = Time.now
     end
 
-    # Public: Parses a raw message. It should return an Array of three elements 
-    # (prefix, command, parameters).
-    #
-    # raw_message - The raw message String.
-    #
-    # Examples
-    #
-    #   parse(":prefix COMMAND parameter :the trail")
-    #   # => ["prefix", "COMMAND", ["parameter", "the trail"]]
-    #
-    # Returns an Array of three elements.
-    # Raises NotImplementedError when not implemented (default).
-    def parse(raw_message)
-      raise NotImplementedError, "#{self}#parse is not implemented."
-    end
-
-    # Public: Checks a raw message for validity. It should return true when 
-    # `raw_message` is a valid message, false otherwise.
-    #
-    # raw_message - The raw message String.
+    # Public: Checks a the message for validity. It should return `true` when 
+    # the message is a valid message, `false` otherwise.
     #
     # Returns true or false.
     # Raises NotImplementedError when not implemented (default).
-    def valid?(raw_message)
-      raise NotImplementedError, "#{self}#valid? is not implemented."
+    def valid?
+      raise NotImplementedError, "#{self.class}#valid? is not implemented."
     end
 
     # Public: Checks the equality of the trail and other with the "equals 

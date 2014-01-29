@@ -2,6 +2,22 @@ module IRC
   # Public: Represents a Message. This class is intended to be subclassed. Its
   # `#parse` and `#valid?` methods are not implemented and should be redefined.
 	class Prefix
+    # Public: Parses a raw prefix. It should return an Array of three elements
+    # (nick, user, host).
+    #
+    # raw_prefix - A raw prefix String.
+    #
+    # Examples
+    #
+    #   Prefix.parse("nick!user@host.com")
+    #   # => ["nick", "user", "host.com"]
+    #
+    # Returns an Array of three elements.
+    # Raises NotImplementedError when not implemented (default).
+    def self.parse(raw_prefix)
+      raise NotImplementedError, "#{self}.parse is not implemented."
+    end
+
     # Public: Gets the raw message String.
     attr_reader :raw
 
@@ -18,18 +34,7 @@ module IRC
     def initialize(raw_prefix)
       @raw = raw_prefix
 
-      @nick, @user, @host = parse raw_prefix
-    end
-
-    # Internal: Parses a raw prefix. It should return an Array of three elements
-    # (nick, user, host).
-    #
-    # raw_prefix - A raw prefix String.
-    #
-    # Returns an Array of three elements.
-    # Raises NotImplementedError when not implemented (default).
-    def parse(raw_prefix)
-      raise NotImplementedError, "#{self}#parse is not implemented."
+      @nick, @user, @host = self.class.parse raw_prefix
     end
 
     # Public: Checks the prefix for validity. It should return `true` when the 
@@ -38,7 +43,7 @@ module IRC
     # Returns true or false.
     # Raises NotImplementedError when not implemented (default).
     def valid?
-      raise NotImplementedError, "#{self}#valid? is not implemented."
+      raise NotImplementedError, "#{self.class}#valid? is not implemented."
     end
 
     # Public: Checks the equality of the prefix and other. The comparison is

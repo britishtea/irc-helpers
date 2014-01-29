@@ -1,16 +1,12 @@
 require_relative "../test_helper"
 require "irc/prefix"
 
-class TestPrefix < IRC::Prefix
-  def parse(_)
-    ["nick", "user", "host.com"]
-  end
+TestPrefix = Class.new IRC::Prefix do
+  define_singleton_method(:parse) { |*_| ["nick", "user", "host.com"] }
 end
 
-class TestMask < IRC::Prefix
-  def parse(_)
-    ["n?ck", "*", "h*st.com"]
-  end
+TestMask = Class.new IRC::Prefix do
+  define_singleton_method(:parse) { |*_| ["n?ck", "*", "h*st.com"] }
 end
 
 # Because of IRC's Scandinavian origin, the characters {}|^ are considered to be
@@ -18,10 +14,8 @@ end
 # critical issue when determining the equivalence of two nicknames or channel 
 # names.
 
-class ScandinavianPrefix < IRC::Prefix
-  def parse(_)
-    ["{}|^abc[]\\~", "user", "host.com"]
-  end
+ScandinavianPrefix = Class.new IRC::Prefix do
+  define_singleton_method(:parse) { |*_| ["{}|^abc[]\\~", "user", "host.com"] }
 end
 
 setup { TestPrefix.new "" }
