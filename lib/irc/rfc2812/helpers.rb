@@ -51,6 +51,27 @@ module IRC
         return [prefix, command, parameters.compact]
       end
 
+      # Public: Parses an IRC prefix.
+      #
+      # prefix - A prefix String.
+      #
+      # Returns an Array of form ["nick", "user", "host.com"].
+      def parse_prefix(prefix)
+        nick_and_user, host = String(prefix).split "@", 2
+
+        if host.nil?
+          if nick_and_user.include? "."
+            servername = nick_and_user
+          else
+            nickname = nick_and_user
+          end
+        else
+          nickname, user = nick_and_user.split "!", 2
+        end
+
+        [nickname, user, host || servername]
+      end
+
       # Public: Checks if a String is a valid IRC message according to Section
       # 2.3 of RFC 2812. Note that not all constraints are checked, yet.
       #
@@ -84,6 +105,33 @@ module IRC
         # Hostnames can not be longer than 63 characters.
         hostname = prefix.split("@")[1] || (prefix if prefix.include? ".") || ""
         return false if hostname.length > 63
+
+        return true
+      end
+
+      # Public: Checks if a String is a valid IRC prefix according to Section 
+      # 2.3 of RFC 2812. Note that not all constraints are checked, yet.
+      #
+      # prefix - A prefix String.
+      #
+      # Returns a Boolean (true or false).
+      def valid_prefix?(prefix)
+        return false if prefix.count("@") > 1
+        return false if prefix.count("!") > 1
+
+        nick, user, host = parse_prefix prefix
+
+        # Hostnames can not be longer than 63 characters.
+        return false if String(host).length > 63
+
+        # User can not contain ["\x00", "\r", "\n", " ", "@"]
+        return false if ["\x00", "\r", "\n", " ", "@"].any? do |char|
+          String(user).include? char
+        end
+
+        # Nick can not contain characters other than A-Z, a-z, 0-9, "[", "]", 
+        # "\", "`", "_", "^", "{", "|" or "}"
+        return false if nick && nick !~ /^[\w\[\]\\`\^\{\|\}]+$/
 
         return true
       end
