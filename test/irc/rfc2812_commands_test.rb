@@ -7,7 +7,8 @@ test "module as receiver" do
   assert mod.respond_to? :privmsg
   assert mod.respond_to? :raw
 
-  assert_equal mod.privmsg("#channel", "message"), "PRIVMSG #channel :message"
+  privmsg = mod.privmsg("#channel", "message")
+  assert_equal privmsg, "PRIVMSG #channel :message\r\n"
 end
 
 setup do
@@ -19,261 +20,275 @@ end
 
 # Connection registration
 
-test("#pass") { |command| assert_equal command.pass("pass"), "PASS pass" }
-  
-test("#nick") { |command| assert_equal command.nick("WiZ"), "NICK WiZ" }
-  
-test "#user" do |command|
-  user = command.user "guest", "Ronnie Reagan", false
-  assert_equal user, "USER guest 0 * :Ronnie Reagan"
-
-  user = command.user "guest", "Ronnie Reagan"
-  assert_equal user, "USER guest 8 * :Ronnie Reagan"
+test "#pass" do |c|
+  assert_equal c.pass("pass"), "PASS pass\r\n"
 end
   
-test("#oper") { |command| assert_equal command.oper("x", "y"), "OPER x y" }
-  
-test "#mode" do |command|
-  mode = command.mode "nickname", :a
-  assert_equal mode, "MODE nickname +a"
-
-  mode = command.mode "nickname", [:a, :i]
-  assert_equal mode, "MODE nickname +ai"
-
-  mode = command.mode "#channel", :b, "*!*@*"
-  assert_equal mode, "MODE #channel +b *!*@*"
-
-  mode = command.mode "#channel", [:b, -:i], ["*!*@*"]
-  assert_equal mode, "MODE #channel +b-i *!*@*"
-
-  mode = command.mode "#channel", [:o, :o, :o, :o], ["a", "b", "c", "d"]
-  assert_equal mode, ["MODE #channel +ooo a b c", "MODE #channel +o d"]
-end
-
-test "#service" do |command|
-  service = command.service "dict", "French Dictionary", "*.fr"
-  assert_equal service, "SERVICE dict * *.fr 0 0 :French Dictionary"
-end
-
-test "#quit" do |command|
-  assert_equal command.quit, "QUIT" 
-  assert_equal command.quit("Gone"), "QUIT :Gone"
+test "#nick" do |c|
+  assert_equal c.nick("WiZ"), "NICK WiZ\r\n"
 end
   
-test "#squit" do |command|
-  squit = command.squit "tolsun.oulu.fi", "Bad Link"
-  assert_equal squit, "SQUIT tolsun.oulu.fi :Bad Link"
+test "#user" do |c|
+  user = c.user "guest", "Ronnie Reagan", false
+  assert_equal user, "USER guest 0 * :Ronnie Reagan\r\n"
+
+  user = c.user "guest", "Ronnie Reagan"
+  assert_equal user, "USER guest 8 * :Ronnie Reagan\r\n"
+end
+  
+test "#oper" do |c|
+  assert_equal c.oper("x", "y"), "OPER x y\r\n"
+end
+  
+test "#mode" do |c|
+  mode = c.mode "nickname", :a
+  assert_equal mode, "MODE nickname +a\r\n"
+
+  mode = c.mode "nickname", [:a, :i]
+  assert_equal mode, "MODE nickname +ai\r\n"
+
+  mode = c.mode "#channel", :b, "*!*@*"
+  assert_equal mode, "MODE #channel +b *!*@*\r\n"
+
+  mode = c.mode "#channel", [:b, -:i], ["*!*@*"]
+  assert_equal mode, "MODE #channel +b-i *!*@*\r\n"
+
+  mode = c.mode "#channel", [:o, :o, :o, :o], ["a", "b", "c", "d"]
+  assert_equal mode, "MODE #channel +ooo a b c\r\nMODE #channel +o d\r\n"
+end
+
+test "#service" do |c|
+  service = c.service "dict", "French Dictionary", "*.fr"
+  assert_equal service, "SERVICE dict * *.fr 0 0 :French Dictionary\r\n"
+end
+
+test "#quit" do |c|
+  assert_equal c.quit, "QUIT\r\n"
+  assert_equal c.quit("Gone"), "QUIT :Gone\r\n"
+end
+  
+test "#squit" do |c|
+  squit = c.squit "tolsun.oulu.fi", "Bad Link"
+  assert_equal squit, "SQUIT tolsun.oulu.fi :Bad Link\r\n"
 end
 
 # Channel operations
 
-test "#join" do |command|
-  assert_equal command.join("#foobar"), ["JOIN #foobar"]
-  assert_equal command.join("&foo", "bar"), ["JOIN &foo bar"]
+test "#join" do |c|
+  assert_equal c.join("#foobar"), "JOIN #foobar\r\n"
+  assert_equal c.join("&foo", "bar"), "JOIN &foo bar\r\n"
 
-  join = command.join ["#foo" , "&bar", "!baz", "#foo", "&bar", "!baz"] 
-  assert_equal join, ["JOIN #foo,&bar,!baz,#foo,&bar", "JOIN !baz"]
+  join = c.join ["#foo" , "&bar", "!baz", "#foo", "&bar", "!baz"] 
+  assert_equal join, "JOIN #foo,&bar,!baz,#foo,&bar\r\nJOIN !baz\r\n"
 
-  join = command.join ["#foo" , "&bar", "!baz", "#foo", "&bar", "!baz"], ["bar"]
-  assert_equal join, ["JOIN #foo,&bar,!baz,#foo,&bar bar", "JOIN !baz"]
+  join = c.join ["#foo" , "&bar", "!baz", "#foo", "&bar", "!baz"], ["bar"]
+  assert_equal join, "JOIN #foo,&bar,!baz,#foo,&bar bar\r\nJOIN !baz\r\n"
 end
 
-test "#part" do |command|
-  assert_equal command.part("#foobar"), "PART #foobar :"
-  assert_equal command.part(["#foo", "&bar"]), "PART #foo,&bar :"
-  assert_equal command.part("#foobar", "Bye"), "PART #foobar :Bye"
-  assert_equal command.part(["#foo", "&bar"], "Bye"), "PART #foo,&bar :Bye"
+test "#part" do |c|
+  assert_equal c.part("#foobar"), "PART #foobar :\r\n"
+  assert_equal c.part(["#foo", "&bar"]), "PART #foo,&bar :\r\n"
+  assert_equal c.part("#foobar", "Bye"), "PART #foobar :Bye\r\n"
+  assert_equal c.part(["#foo", "&bar"], "Bye"), "PART #foo,&bar :Bye\r\n"
 end
 
-test "#topic" do |command|
-  assert_equal command.topic("#test"), "TOPIC #test"
-  assert_equal command.topic("#test", "topic"), "TOPIC #test :topic"
-  assert_equal command.topic("#test", ""), "TOPIC #test :"
-end
-  
-test "#names" do |command|
-  assert_equal command.names("#x"), "NAMES #x"
-  assert_equal command.names(["#x", "#42"]), "NAMES #x,#42"
-  assert_equal command.names("#x", "irc.org"), "NAMES #x irc.org"
-  assert_equal command.names(["#x", "#42"], "irc.org"), "NAMES #x,#42 irc.org"
+test "#topic" do |c|
+  assert_equal c.topic("#test"), "TOPIC #test\r\n"
+  assert_equal c.topic("#test", "topic"), "TOPIC #test :topic\r\n"
+  assert_equal c.topic("#test", ""), "TOPIC #test :\r\n"
 end
   
-test "#list" do |command|
-  assert_equal command.list("#x") , "LIST #x"
-  assert_equal command.list(["#x", "#42"]), "LIST #x,#42"
-  assert_equal command.list("#x", "irc.org"), "LIST #x irc.org"
-  assert_equal command.list(["#x", "#42"], "irc.org"), "LIST #x,#42 irc.org"
+test "#names" do |c|
+  assert_equal c.names("#x"), "NAMES #x\r\n"
+  assert_equal c.names(["#x", "#42"]), "NAMES #x,#42\r\n"
+  assert_equal c.names("#x", "irc.org"), "NAMES #x irc.org\r\n"
+  assert_equal c.names(["#x", "#42"], "irc.org"), "NAMES #x,#42 irc.org\r\n"
+end
+  
+test "#list" do |c|
+  assert_equal c.list("#x") , "LIST #x\r\n"
+  assert_equal c.list(["#x", "#42"]), "LIST #x,#42\r\n"
+  assert_equal c.list("#x", "irc.org"), "LIST #x irc.org\r\n"
+  assert_equal c.list(["#x", "#42"], "irc.org"), "LIST #x,#42 irc.org\r\n"
 end
 
-test "#invite" do |command|
-  assert_equal command.invite("Wiz", "#x"), "INVITE Wiz #x"
+test "#invite" do |c|
+  assert_equal c.invite("Wiz", "#x"), "INVITE Wiz #x\r\n"
 end
 
-test "#kick" do |command|
-  assert_equal command.kick("#x", "John"), "KICK #x John"
-  assert_equal command.kick("#x", "John", "reason"), "KICK #x John :reason"
+test "#kick" do |c|
+  assert_equal c.kick("#x", "John"), "KICK #x John\r\n"
+  assert_equal c.kick("#x", "John", "reason"), "KICK #x John :reason\r\n"
 end
 
 # Sending Messages
 
-test "#privmsg" do |command|
-  message = command.privmsg "jto@tolsun.oulu.fi", "Hello !"
-  assert_equal message, "PRIVMSG jto@tolsun.oulu.fi :Hello !"
+test "#privmsg" do |c|
+  message = c.privmsg "jto@tolsun.oulu.fi", "Hello !"
+  assert_equal message, "PRIVMSG jto@tolsun.oulu.fi :Hello !\r\n"
 end
 
-test "#notice" do |command|
-  message = command.notice "jto@tolsun.oulu.fi", "Hello !"
-  assert_equal message, "NOTICE jto@tolsun.oulu.fi :Hello !"
+test "#notice" do |c|
+  message = c.notice "jto@tolsun.oulu.fi", "Hello !"
+  assert_equal message, "NOTICE jto@tolsun.oulu.fi :Hello !\r\n"
 end
 
-# Server queries and commands
+# Server queries and cs
 
-test "#motd" do |command|
-  assert_equal command.motd, "MOTD"
-  assert_equal command.motd("tolsun.oulu.fi"), "MOTD tolsun.oulu.fi"
+test "#motd" do |c|
+  assert_equal c.motd, "MOTD\r\n"
+  assert_equal c.motd("tolsun.oulu.fi"), "MOTD tolsun.oulu.fi\r\n"
 end
 
-test "#lusers" do |command|
-  assert_equal command.lusers, "LUSERS"
-  assert_equal command.lusers("*.oulu.fi"), "LUSERS *.oulu.fi"
-  assert_equal command.lusers("*.oulu.fi", "x.com"), "LUSERS *.oulu.fi x.com"
+test "#lusers" do |c|
+  assert_equal c.lusers, "LUSERS\r\n"
+  assert_equal c.lusers("*.oulu.fi"), "LUSERS *.oulu.fi\r\n"
+  assert_equal c.lusers("*.oulu.fi", "x.com"), "LUSERS *.oulu.fi x.com\r\n"
 end
 
-test "#version" do |command|
-  assert_equal command.version, "VERSION"
-  assert_equal command.version("tolsun.oulu.fi"), "VERSION tolsun.oulu.fi"
+test "#version" do |c|
+  assert_equal c.version, "VERSION\r\n"
+  assert_equal c.version("tolsun.oulu.fi"), "VERSION tolsun.oulu.fi\r\n"
 end
   
-test "#stats" do |command|
-  assert_equal command.stats, "STATS"
-  assert_equal command.stats("m"), "STATS m"
-  assert_equal command.stats("m", "x.com"), "STATS m x.com"
+test "#stats" do |c|
+  assert_equal c.stats, "STATS\r\n"
+  assert_equal c.stats("m"), "STATS m\r\n"
+  assert_equal c.stats("m", "x.com"), "STATS m x.com\r\n"
 end
 
-test "#links" do |command|
-  assert_equal command.links, "LINKS"
-  assert_equal command.links("*.au"), "LINKS *.au"
-  assert_equal command.links("*.bu.edu", "*.edu"), "LINKS *.edu *.bu.edu"
+test "#links" do |c|
+  assert_equal c.links, "LINKS\r\n"
+  assert_equal c.links("*.au"), "LINKS *.au\r\n"
+  assert_equal c.links("*.bu.edu", "*.edu"), "LINKS *.edu *.bu.edu\r\n"
 end
 
-test "#time" do |command|
-  assert_equal command.time, "TIME"
-  assert_equal command.time("*.edu"), "TIME *.edu"
+test "#time" do |c|
+  assert_equal c.time, "TIME\r\n"
+  assert_equal c.time("*.edu"), "TIME *.edu\r\n"
 end
 
-test "#connect" do |command|
-  assert_equal command.connect("x.co", 6667), "CONNECT x.co 6667"
-  assert_equal command.connect("x.co", 6667, "x.co"), "CONNECT x.co 6667 x.co"
+test "#connect" do |c|
+  assert_equal c.connect("x.co", 6667), "CONNECT x.co 6667\r\n"
+  assert_equal c.connect("x.co", 6667, "x.co"), "CONNECT x.co 6667 x.co\r\n"
 end
   
-test "#trace" do |command|
-  assert_equal command.trace, "TRACE"
-  assert_equal command.trace("*.oulu.fi"), "TRACE *.oulu.fi"
+test "#trace" do |c|
+  assert_equal c.trace, "TRACE\r\n"
+  assert_equal c.trace("*.oulu.fi"), "TRACE *.oulu.fi\r\n"
 end
   
-test "#admin" do |command|
-  assert_equal command.admin, "ADMIN"
-  assert_equal command.admin("syrk"), "ADMIN syrk"
+test "#admin" do |c|
+  assert_equal c.admin, "ADMIN\r\n"
+  assert_equal c.admin("syrk"), "ADMIN syrk\r\n"
 end
   
-test "#info" do |command|
-  assert_equal command.info, "INFO"
-  assert_equal command.info("Angel"), "INFO Angel"
+test "#info" do |c|
+  assert_equal c.info, "INFO\r\n"
+  assert_equal c.info("Angel"), "INFO Angel\r\n"
 end
 
 # Service query and commands
 
-test "#servlist" do |command|
-  assert_equal command.servlist, "SERVLIST"
-  assert_equal command.servlist("*.edu"), "SERVLIST *.edu"
-  assert_equal command.servlist("*.edu", "x"), "SERVLIST *.edu x"
+test "#servlist" do |c|
+  assert_equal c.servlist, "SERVLIST\r\n"
+  assert_equal c.servlist("*.edu"), "SERVLIST *.edu\r\n"
+  assert_equal c.servlist("*.edu", "x"), "SERVLIST *.edu x\r\n"
 end
   
-test "#squery" do |command|
-  squery = command.squery "irchelp", "HELP privmsg"
-  assert_equal squery, "SQUERY irchelp :HELP privmsg"
+test "#squery" do |c|
+  squery = c.squery "irchelp", "HELP privmsg"
+  assert_equal squery, "SQUERY irchelp :HELP privmsg\r\n"
 end
 
 # User based queries
 
-test "#who" do |command|
-  assert_equal command.who, "WHO"
-  assert_equal command.who("*.fi"), "WHO *.fi"
-  assert_equal command.who("*.fi", true), "WHO *.fi o"
+test "#who" do |c|
+  assert_equal c.who, "WHO\r\n"
+  assert_equal c.who("*.fi"), "WHO *.fi\r\n"
+  assert_equal c.who("*.fi", true), "WHO *.fi o\r\n"
 end
 
-test "#whois" do |command|
-  assert_equal command.whois("wiz"), "WHOIS wiz"
-  assert_equal command.whois(["wiz", "trillian"]), "WHOIS wiz,trillian"
-  assert_equal command.whois("wiz", "eff.org"), "WHOIS eff.org wiz"
+test "#whois" do |c|
+  assert_equal c.whois("wiz"), "WHOIS wiz\r\n"
+  assert_equal c.whois(["wiz", "trillian"]), "WHOIS wiz,trillian\r\n"
+  assert_equal c.whois("wiz", "eff.org"), "WHOIS eff.org wiz\r\n"
 
-  whois = command.whois ["wiz", "trillian"], "eff.org"
-  assert_equal whois, "WHOIS eff.org wiz,trillian"
+  whois = c.whois ["wiz", "trillian"], "eff.org"
+  assert_equal whois, "WHOIS eff.org wiz,trillian\r\n"
 end
 
-test "#whowas" do |command|
-  assert_equal command.whowas("wiz"), "WHOWAS wiz"
-  assert_equal command.whowas(["wiz", "trillian"]), "WHOWAS wiz,trillian"
-  assert_equal command.whowas("wiz", 2), "WHOWAS wiz 2"
-  assert_equal command.whowas(["wiz", "trillian"], 2), "WHOWAS wiz,trillian 2"
-  assert_equal command.whowas("wiz", 2, "*.edu"), "WHOWAS wiz 2 *.edu"
+test "#whowas" do |c|
+  assert_equal c.whowas("wiz"), "WHOWAS wiz\r\n"
+  assert_equal c.whowas(["wiz", "trillian"]), "WHOWAS wiz,trillian\r\n"
+  assert_equal c.whowas("wiz", 2), "WHOWAS wiz 2\r\n"
+  assert_equal c.whowas(["wiz", "trillian"], 2), "WHOWAS wiz,trillian 2\r\n"
+  assert_equal c.whowas("wiz", 2, "*.edu"), "WHOWAS wiz 2 *.edu\r\n"
 
-  whowas = command.whowas(["wiz", "trillian"], 2, "*.edu")
-  assert_equal whowas, "WHOWAS wiz,trillian 2 *.edu"
+  whowas = c.whowas(["wiz", "trillian"], 2, "*.edu")
+  assert_equal whowas, "WHOWAS wiz,trillian 2 *.edu\r\n"
 end
 
 # Miscellaneous messages
 
-test "#kill" do |command|
-  assert_equal command.kill("nickname", "reason"), "KILL nickname :reason"
+test "#kill" do |c|
+  assert_equal c.kill("nickname", "reason"), "KILL nickname :reason\r\n"
 end
   
-test "#ping" do |command|
-  assert_equal command.ping("tolsun.oulu.fi"), "PING tolsun.oulu.fi"
-  assert_equal command.ping("WiZ", "tolsun.oulu.fi"), "PING WiZ tolsun.oulu.fi"
+test "#ping" do |c|
+  assert_equal c.ping("tolsun.oulu.fi"), "PING tolsun.oulu.fi\r\n"
+  assert_equal c.ping("WiZ", "tolsun.oulu.fi"), "PING WiZ tolsun.oulu.fi\r\n"
 end
   
-test "#pong" do |command|
-  assert_equal command.pong("csd.bu.edu"), "PONG csd.bu.edu"
-  assert_equal command.pong("csd.bu.edu", "x.com"), "PONG csd.bu.edu x.com"
+test "#pong" do |c|
+  assert_equal c.pong("csd.bu.edu"), "PONG csd.bu.edu\r\n"
+  assert_equal c.pong("csd.bu.edu", "x.com"), "PONG csd.bu.edu x.com\r\n"
 end
 
-test("#error") { |command| assert_equal command.error("msg"), "ERROR :msg" }
+test "#error" do |c|
+  assert_equal c.error("msg"), "ERROR :msg\r\n"
+end
 
 # Optional features
 
-test "#away" do |command|
-  assert_equal command.away, "AWAY"
-  assert_equal command.away("Getting the pizza"), "AWAY :Getting the pizza"
+test "#away" do |c|
+  assert_equal c.away, "AWAY\r\n"
+  assert_equal c.away("Getting the pizza"), "AWAY :Getting the pizza\r\n"
 end
 
-test("#rehash") { |command| assert_equal command.rehash, "REHASH" }
-
-test("#die") { |command| assert_equal command.die, "DIE" }
-
-test("#restart") { |command| assert_equal command.restart, "RESTART" }
-  
-test "#summon" do |command|
-  assert_equal command.summon("jto"), "SUMMON jto"
-  assert_equal command.summon("jto", "x.com"), "SUMMON jto x.com"
-  assert_equal command.summon("jto", "x.com", "#test"), "SUMMON jto x.com #test"
-end
-  
-test "#users" do |command|
-  assert_equal command.users, "USERS"
-  assert_equal command.users("eff.org"), "USERS eff.org"
+test "#rehash" do |c|
+  assert_equal c.rehash, "REHASH\r\n"
 end
 
-test "#wallops" do |command|
-  assert_equal command.wallops("Text to be sent"), "WALLOPS :Text to be sent"
+test "#die" do |c|
+  assert_equal c.die, "DIE\r\n"
 end
 
-test "#userhost" do |command|
-  assert_equal command.userhost("Wiz"), "USERHOST Wiz"
-  assert_equal command.userhost(["Wiz", "x", "y"]), "USERHOST Wiz x y"
+test "#restart" do |c|
+  assert_equal c.restart, "RESTART\r\n"
 end
   
-test "#ison" do |command|
-  assert_equal command.ison("Wiz"), "ISON Wiz"
-  assert_equal command.ison(["Wiz", "x", "y"]), "ISON Wiz x y"
+test "#summon" do |c|
+  assert_equal c.summon("jto"), "SUMMON jto\r\n"
+  assert_equal c.summon("jto", "x.com"), "SUMMON jto x.com\r\n"
+  assert_equal c.summon("jto", "x.com", "#test"), "SUMMON jto x.com #test\r\n"
+end
+  
+test "#users" do |c|
+  assert_equal c.users, "USERS\r\n"
+  assert_equal c.users("eff.org"), "USERS eff.org\r\n"
+end
+
+test "#wallops" do |c|
+  assert_equal c.wallops("Text to be sent"), "WALLOPS :Text to be sent\r\n"
+end
+
+test "#userhost" do |c|
+  assert_equal c.userhost("Wiz"), "USERHOST Wiz\r\n"
+  assert_equal c.userhost(["Wiz", "x", "y"]), "USERHOST Wiz x y\r\n"
+end
+  
+test "#ison" do |c|
+  assert_equal c.ison("Wiz"), "ISON Wiz\r\n"
+  assert_equal c.ison(["Wiz", "x", "y"]), "ISON Wiz x y\r\n"
 end

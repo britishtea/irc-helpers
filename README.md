@@ -53,8 +53,8 @@ class Handler
   end
 
   # Always implement a #raw when including IRC::*::Commands.
-  def raw(*messages)
-    messages.each { |msg| connection.write msg }
+  def raw(string)
+    connection.write string
   end
 end
 ```

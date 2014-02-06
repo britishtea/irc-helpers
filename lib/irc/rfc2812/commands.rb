@@ -7,17 +7,17 @@ module IRC
     # Examples
     # 
     #   class Connection
-    #     include Banter::IRC::Commands
+    #     include IRC::RFC2812::Commands
     #     
     #     # Some methods that set up a socket and whatnot.
     #     
     #     def raw(message)
-    #       @socket.write "message\r\n"
+    #       @socket.write message
     #     end
     #   end
     #
     #   x = Connection.new
-    #   x.join '#channel'
+    #   x.join "#channel"
     module Commands
       extend self
 
@@ -28,7 +28,7 @@ module IRC
       #
       # password - The server password String.
       def pass(password)
-        raw "PASS #{password}"
+        raw "PASS #{password}\r\n"
       end
 
       # Public: Sends a NICK command. The NICK command is used to give a user a
@@ -36,7 +36,7 @@ module IRC
       #
       # nickname - The desired nickname String.
       def nick(nickname)
-        raw "NICK #{nickname}"
+        raw "NICK #{nickname}\r\n"
       end
 
       # Public: Sends a USER command. The USER command is used at the beginning of
@@ -46,7 +46,7 @@ module IRC
       # realname  - The real name String.
       # invisible - A Boolean that asks for the user mode 'i' (default: true).
       def user(username, realname, invisible = true)
-        raw "USER #{username} #{invisible ? 8 : 0} * :#{realname}"
+        raw "USER #{username} #{invisible ? 8 : 0} * :#{realname}\r\n"
       end
 
       # Public: Sends an OPER command. The OPER command is used by a normal user
@@ -55,7 +55,7 @@ module IRC
       # user     - The username String.
       # password - The password String.
       def oper(user, password)
-        raw "OPER #{user} #{password}"
+        raw "OPER #{user} #{password}\r\n"
       end
 
       # Public: Sends a MODE command. This either requests the modes (when the
@@ -78,9 +78,11 @@ module IRC
       #   mode '#channel', [+:b, :i, :m], '*!*@*'
       def mode(target, modes = [], parameters = [])
         if modes.size > 3
-          (modes.size / 3 + 1).times.map do
+          messages = (modes.size / 3 + 1).times.map do
             mode target, modes.shift(3), parameters.shift(3)
           end
+
+          raw messages.join
         else
           parameters = Array(parameters)
           modes      = Array(modes).map! { |m| m.to_s.start_with?('-') ? m : +m }
@@ -91,7 +93,7 @@ module IRC
           mode_string << "+#{pos.map { |m| m[1] }.join}" unless pos.empty?
           mode_string << "-#{neg.map { |m| m[1] }.join}" unless neg.empty?
 
-          raw "MODE #{target} #{mode_string} #{parameters.join ' '}".strip
+          raw "MODE #{target} #{mode_string} #{parameters.join " "}".strip << "\r\n"
         end
       end
 
@@ -102,14 +104,14 @@ module IRC
       # info         - An info String.
       # distribution - A String servers have to match against.
       def service(nickname, info, distribution = '*')
-        raw "SERVICE #{nickname} * #{distribution} 0 0 :#{info}"
+        raw "SERVICE #{nickname} * #{distribution} 0 0 :#{info}\r\n"
       end
 
       # Public: Sends a QUIT command.
       #
       # message - The quit message String (default: nil).
       def quit(message = nil)
-        raw message.nil? ? "QUIT" : "QUIT :#{message}"
+        raw (message.nil? ? "QUIT" : "QUIT :#{message}") << "\r\n"
       end
 
       # Public: Sends a SQUIT command. The SQUIT command is used to disconnect
@@ -118,7 +120,7 @@ module IRC
       # server  - A server name String.
       # comment - A comment String.
       def squit(server, comment)
-        raw "SQUIT #{server} :#{comment}"
+        raw "SQUIT #{server} :#{comment}\r\n"
       end
 
       # Channel Operation Commands
@@ -136,14 +138,17 @@ module IRC
       #   join '#foo', 'key'
       #   join ['#foo', #bar], ['key_for_#foo']
       def join(channels, keys = nil)
-        channel = Array(channels).each_slice(5).to_a
-        key     = Array(keys).each_slice(5).to_a
-        
-        messages = channel.zip(key).map do |channels,keys|
-          "JOIN #{channels.map(&:to_s).join ','} #{Array(keys).join ','}".strip
+        channel_slices = Array(channels).each_slice(5).to_a
+        key_slices     = Array(keys).each_slice(5).to_a
+
+        messages = channel_slices.zip(key_slices).map do |cs, ks|
+          channel_list = cs.map(&:to_s).join ','
+          key_list     = ks ? ks.join(" ") : ks
+
+          "JOIN #{channel_list} #{key_list}".strip << "\r\n"
         end
 
-        raw messages
+        raw messages.join
       end
 
       # Public: Sends a PART command (leaves a channel).
@@ -151,7 +156,7 @@ module IRC
       # channels - The channel name String or an Array of channel name Strings.
       # message  - A part message String (default: nil).
       def part(channels, message = nil)
-        raw "PART #{Array(channels).map(&:to_s).join ','} :#{message}"
+        raw "PART #{Array(channels).map(&:to_s).join ','} :#{message}\r\n"
       end
 
       # Public: Sends a TOPIC command.
@@ -164,7 +169,11 @@ module IRC
       #   topic '#ruby' 
       #   topic '#ruby', 'welcome to #ruby!'
       def topic(channel, topic = nil)
-        raw topic.nil? ? "TOPIC #{channel}" : "TOPIC #{channel} :#{topic}"
+        if topic.nil?
+          raw "TOPIC #{channel}\r\n"
+        else
+          raw "TOPIC #{channel} :#{topic}\r\n"
+        end
       end
 
       # Public: Sends a NAMES command. Requests all nicknames that are visible
@@ -182,7 +191,9 @@ module IRC
       #
       # Returns an Array of IRC::Messages or nil.
       def names(channels = nil, target = nil)
-        raw "NAMES #{Array(channels).map(&:to_s).join ','} #{target}".strip
+        channel_list = Array(channels).map(&:to_s).join ','
+        
+        raw "NAMES #{channel_list} #{target}".strip << "\r\n"
       end
 
       # Public: Sends a LIST command. Lists channels and their topics.
@@ -196,7 +207,9 @@ module IRC
       #   list # => requests to list all channels
       #   list ['#ruby', '#rails'] # requests to list channels #ruby and #rails
       def list(channels = nil, target = nil)
-        raw "LIST #{Array(channels).map(&:to_s).join ','} #{target}".strip
+        channel_list = Array(channels).map(&:to_s).join ',' 
+        
+        raw "LIST #{channel_list} #{target}".strip << "\r\n"
       end
 
       # Public: Sends an INVITE command.
@@ -204,7 +217,7 @@ module IRC
       # nickname - The nickname String of the user that should be invited.
       # channel  - The channel name String.
       def invite(nickname, channel)
-        raw "INVITE #{nickname} #{channel}"
+        raw "INVITE #{nickname} #{channel}\r\n"
       end
 
       # Public: Sends a KICK command.
@@ -214,9 +227,9 @@ module IRC
       # comment - The kick message String (default: nil).
       def kick(channel, user, comment = nil)
         if comment.nil?
-          raw "KICK #{channel} #{user}"
+          raw "KICK #{channel} #{user}\r\n"
         else
-          raw "KICK #{channel} #{user} :#{comment}"
+          raw "KICK #{channel} #{user} :#{comment}\r\n"
         end
       end
 
@@ -228,7 +241,7 @@ module IRC
       # receiver - The nickname, channel name, host mask, server mask String.
       # message  - The message String.
       def privmsg(receiver, message)
-        raw "PRIVMSG #{receiver} :#{message}"
+        raw "PRIVMSG #{receiver} :#{message}\r\n"
       end
 
       # Public: Sends a NOTICE command.
@@ -236,7 +249,7 @@ module IRC
       # receiver - The nickname, channel name, host mask or server mask String.
       # message  - The message String.
       def notice(receiver, message)
-        raw "NOTICE #{receiver} :#{message}"
+        raw "NOTICE #{receiver} :#{message}\r\n"
       end
 
       # Server Queries
@@ -246,7 +259,7 @@ module IRC
       #
       # target - A server name String (default: nil).
       def motd(target = nil)
-        raw "MOTD #{target}".strip
+        raw "MOTD #{target}".strip << "\r\n"
       end
 
       # Public: Sends a LUSERS command. The LUSERS command is used to get
@@ -255,7 +268,7 @@ module IRC
       # mask   - A mask String (default: nil).
       # target - A target String (default: nil).
       def lusers(mask = nil, target = nil)
-        raw "LUSERS #{mask} #{target}".strip
+        raw "LUSERS #{mask} #{target}".strip << "\r\n"
       end
 
       # Public: Sends a VERSION command. The VERSION command is used to query
@@ -263,7 +276,7 @@ module IRC
       #
       # target - A server name String (default: nil).
       def version(target = nil)
-        raw "VERSION #{target}".strip
+        raw "VERSION #{target}".strip << "\r\n"
       end
 
       # Public: Sends a STATS command. The STATS command is used to query
@@ -272,7 +285,7 @@ module IRC
       # query  - A single character query Symbol (default: nil).
       # target - A server name String (default: nil).
       def stats(query = nil, target = nil)
-        raw "STATS #{query} #{target}".strip
+        raw "STATS #{query} #{target}".strip << "\r\n"
       end
 
       # Public: Sends a LINKS command. The LINKS command is used to list all
@@ -281,7 +294,7 @@ module IRC
       # mask   - A host mask String (default: nil).
       # remote - A remote server name String (default: nil).
       def links(mask = nil, remote = nil)
-        raw (remote.nil? ? "LINKS #{mask}" : "LINKS #{remote} #{mask}").strip
+        raw "LINKS #{remote}".strip << " #{mask}".rstrip << "\r\n"
       end
 
       # Public: Sends a TIME command. The time command is used to query local
@@ -289,7 +302,7 @@ module IRC
       #
       # target - A target (server name) String (default: nil).
       def time(target = nil)
-        raw "TIME #{target}".strip
+        raw "TIME #{target}".strip << "\r\n"
       end
 
       # Public: Sends a CONNECT command. The CONNECT command can be used to
@@ -300,7 +313,7 @@ module IRC
       # port   - A port number Integer (default: 6667).
       # remote - A remote (server name) String (default: nil).
       def connect(target, port = 6667, remote = nil)
-        raw "CONNECT #{target} #{port} #{remote}".strip
+        raw "CONNECT #{target} #{port} #{remote}".strip << "\r\n"
       end
 
       # Public: Sends a TRACE command. The TRACE command is used to find the 
@@ -308,7 +321,7 @@ module IRC
       #
       # target - A target (server name) String (default: nil).
       def trace(target = nil)
-        raw "TRACE #{target}".strip
+        raw "TRACE #{target}".strip << "\r\n"
       end
       
       # Public: Sends an ADMIN command. The ADMIN command is used to find
@@ -317,7 +330,7 @@ module IRC
       #
       # target - A target (server name) String (default: nil).
       def admin(target = nil)
-        raw "ADMIN #{target}".strip
+        raw "ADMIN #{target}".strip << "\r\n"
       end
       
       # Public: Sends an INFO command. The INFO command is REQUIRED to return
@@ -325,7 +338,7 @@ module IRC
       #
       # target - A target (server name) String (default: nil).
       def info(target = nil)
-        raw "INFO #{target}".strip
+        raw "INFO #{target}".strip << "\r\n"
       end
       
 
@@ -338,7 +351,7 @@ module IRC
       # mask   - A mask String (default: nil).
       # target - A type String (default: nil).
       def servlist(mask = nil, type = nil)
-        raw "SERVLIST #{mask} #{type}".strip
+        raw "SERVLIST #{mask} #{type}".strip << "\r\n"
       end
       
       # Public: Sends a SQUERY command. The SQUERY command is used similarly
@@ -347,7 +360,7 @@ module IRC
       # servicename - A service name String.
       # text        - A text String.
       def squery(servicename, text)
-        raw "SQUERY #{servicename} :#{text}"
+        raw "SQUERY #{servicename} :#{text}\r\n"
       end
 
       # User Based Queries
@@ -366,7 +379,7 @@ module IRC
       #   who '*.fi'
       #   who '*.fi', true
       def who(name = nil, operators_only = false)
-        raw "WHO #{name} #{"o" if operators_only}".strip
+        raw "WHO #{name} #{"o" if operators_only}".strip << "\r\n"
       end
 
       # Public: Sends a WHOIS command. The WHOIS command is used to query
@@ -382,7 +395,7 @@ module IRC
       def whois(masks, server = nil)
         masks = Array(masks).map(&:to_s).join ','
 
-        raw server.nil? ? "WHOIS #{masks}" : "WHOIS #{server} #{masks}"
+        raw "WHOIS #{server}".strip << " #{masks}\r\n"
       end
 
       # Public: Sends a WHOWAS command. The WHOWAS command requests information
@@ -399,7 +412,7 @@ module IRC
       def whowas(nicknames, count = nil, target = nil)
         nicknames = Array(nicknames).map(&:to_s).join ','
 
-        raw "WHOWAS #{nicknames} #{count} #{target}".strip
+        raw "WHOWAS #{nicknames} #{count} #{target}".strip << "\r\n"
       end
 
       # Miscellaneous messages
@@ -411,7 +424,7 @@ module IRC
       # nickname - A nickname String.
       # comment  - A comment String (the reason for the kill).
       def kill(nickname, comment)
-        raw "KILL #{nickname} :#{comment}"
+        raw "KILL #{nickname} :#{comment}\r\n"
       end
 
       # Public: Sends a PING command.
@@ -420,7 +433,7 @@ module IRC
       # forward - The name String of the server the PING message should be
       #           forwarded to (default: nil).
       def ping(server, forward = nil)
-        raw "PING #{server} #{forward}".strip
+        raw "PING #{server} #{forward}".strip << "\r\n"
       end
 
       # Public: Sends a PONG command. The PONG command is a reply to a PING
@@ -430,7 +443,7 @@ module IRC
       # deamon2 - The name String of the server the PONG message should be
       #           forwarded to (default: nil).
       def pong(server, forward = nil)
-        raw "PONG #{server} #{forward}".strip
+        raw "PONG #{server} #{forward}".strip << "\r\n"
       end
 
       # Public: Sends an ERROR command. The ERROR command is for use by servers
@@ -438,7 +451,7 @@ module IRC
       #
       # message - A message String.
       def error(message)
-        raw "ERROR :#{message}"
+        raw "ERROR :#{message}\r\n"
       end
 
       # Optional features
@@ -449,26 +462,26 @@ module IRC
       #
       # text - A message String (default: nil).
       def away(text = nil)
-        raw text.nil? ? "AWAY" : "AWAY :#{text}"
+        raw text.nil? ? "AWAY\r\n" : "AWAY :#{text}\r\n"
       end
 
       # Public: Sends a REHASH command. The REHASH command is an administrative
       # command which can be used by an operator to force the server to re-read
       # and process its configuration file.
       def rehash
-        raw 'REHASH'
+        raw "REHASH\r\n"
       end
 
       # Public: Sends a DIE command. An operator can use the DIE command to
       # shutdown the server.
       def die
-        raw 'DIE'
+        raw "DIE\r\n"
       end
 
       # Public: Sends a RESTART command. An operator can use the RESTART command
       # to force the server to restart itself.
       def restart
-        raw 'RESTART'
+        raw "RESTART\r\n"
       end
       
       # Public: Sends a SUMMON command. The SUMMON command can be used to give
@@ -479,7 +492,7 @@ module IRC
       # target  - A target (server name) String (default: nil).
       # channel - A channel name String (default: nil).
       def summon(user, target = nil, channel = nil)
-        raw "SUMMON #{user} #{target} #{channel}".strip
+        raw "SUMMON #{user} #{target} #{channel}".strip << "\r\n"
       end
       
       # Public: Sends a USERS command. The USERS command returns a list of users
@@ -488,7 +501,7 @@ module IRC
       #
       # target - A target (server name) String (default: nil).
       def users(target = nil)
-        raw "USERS #{target}".strip
+        raw "USERS #{target}".strip << "\r\n"
       end
       
       # Public: Sends a WALLOPS command. The WALLOPS command is used to send a
@@ -497,7 +510,7 @@ module IRC
       #
       # text - A text String.
       def wallops(text)
-        raw "WALLOPS :#{text}"
+        raw "WALLOPS :#{text}\r\n"
       end
 
       # Public: Sends an USERHOST command. The USERHOST command requests a list
@@ -505,7 +518,7 @@ module IRC
       #
       # nicknames - A nickname String or an Array of such Strings (max. 5).
       def userhost(nicknames)
-        raw "USERHOST #{Array(nicknames).map { |nick| String(nick) }.join ' '}"
+        raw "USERHOST #{Array(nicknames).map(&:to_s).join " "}\r\n"
       end
 
       # Public: Sends an ISON command. The ISON command requests wether or not a
@@ -513,7 +526,7 @@ module IRC
       #
       # nicknames - A nickname String or an Array of such Strings (max. 5).
       def ison(nicknames)
-        raw "ISON #{Array(nicknames).map { |nick| String(nick) }.join ' '}"
+        raw "ISON #{Array(nicknames).map(&:to_s).join " "}\r\n"
       end
 
       def self.raw(message)
