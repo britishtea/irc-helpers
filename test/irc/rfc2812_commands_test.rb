@@ -1,6 +1,15 @@
 require_relative "../test_helper"
 require "irc/rfc2812/commands"
 
+test "module as receiver" do
+  mod = IRC::RFC2812::Commands
+
+  assert mod.respond_to? :privmsg
+  assert mod.respond_to? :raw
+
+  assert_equal mod.privmsg("#channel", "message"), "PRIVMSG #channel :message"
+end
+
 setup do
   Object.new.tap do |obj| 
     obj.extend IRC::RFC2812::Commands

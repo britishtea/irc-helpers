@@ -19,6 +19,8 @@ module IRC
     #   x = Connection.new
     #   x.join '#channel'
     module Commands
+      extend self
+
       # Connection Registration Commands.
 
       # Public: Sends a PASS command. The PASS command is used to set a
@@ -512,6 +514,10 @@ module IRC
       # nicknames - A nickname String or an Array of such Strings (max. 5).
       def ison(nicknames)
         raw "ISON #{Array(nicknames).map { |nick| String(nick) }.join ' '}"
+      end
+
+      def self.raw(message)
+        message
       end
 
       def raw(*args)
