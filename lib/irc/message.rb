@@ -73,6 +73,48 @@ module IRC
       self.trail =~ other
     end
 
+    # Public: Matches the trail of a Message against a pattern, taking into
+    # account the command and the parameters. Executes the block if the pattern
+    # (plus command and parameters) matches. If `pattern` is a Regexp, the block
+    # receives its captures as arguments.
+    #
+    # command - The command Symbol.
+    # params  - An Array of parameters (defaults to []).
+    # pattern - A String or Regexp pattern.
+    # block   - The block that should be executed.
+    #
+    # Examples
+    # 
+    #   message.match :privmsg, "!help" do
+    #     "..."
+    #   end
+    # 
+    #   message.match :command, /^!help (\S+)$/ do |plugin|
+    #     "..."
+    #   end
+    # 
+    #   message.match :command, ["parameter"], "pattern" do
+    #     "..."
+    #   end
+    #
+    # Returns false if pattern does not match.
+    # Returns true or the result of the block if the pattern does match.
+    def match(command, *params, pattern, &block)
+      return false unless self.command == command
+      return false unless self.params[0..-2] == params || params.empty?
+
+      block ||= -> * { true } 
+
+      if pattern.is_a? Regexp
+        matchdata = self.trail.match pattern
+        return matchdata.nil? ? false : block.call(*matchdata.captures)
+      elsif pattern.respond_to?(:to_str) && self.trail == pattern
+        return block.call
+      else
+        return false
+      end
+    end
+
     # Public: Returns an Array of the following form: `["prefix", :command, 
     # ["parameters","including","trail"]]`.
     #

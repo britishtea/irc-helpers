@@ -45,6 +45,22 @@ test "#=~" do |message|
   assert message =~ /trail/
 end
 
+test "#match" do |message|
+  assert      message.match :command, "the trail"
+  assert (not message.match :cammond, "the trail")
+  assert (not message.match :command, "the trial")
+  
+  assert      message.match :command, /trail/
+  assert (not message.match :command, /trial/)
+
+  assert      message.match :command, *%w(one two three), "the trail"
+  assert (not message.match :command, *%w(three two one), "the trail")
+
+  message.match :command, /the (\S+)/ do |capture|
+    assert_equal capture, "trail"
+  end
+end
+
 # Conversions
 
 test "#to_a" do |message|
