@@ -10,3 +10,16 @@ end
 test "#valid? is implemented" do |message|
   assert message.valid?
 end
+
+test "#numeric?" do |message|
+  assert      message.class.new("001").numeric?
+  assert (not message.numeric?)
+end
+
+# Error replies are found in the range from 400 to 599.
+test "#error?" do |message|
+  assert      message.class.new("404").error?
+  assert (not message.class.new("399").error?)
+  assert (not message.class.new("600").error?)
+  assert (not message.error?)
+end

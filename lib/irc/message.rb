@@ -4,6 +4,9 @@ module IRC
   class Message
     include Comparable
 
+    # Internal: A range of error reply codes.
+    ERROR_REPLY_RANGE = :"400"...:"599"
+
     # Public: Parses a raw message. It should return an Array of three elements 
     # (prefix, command, parameters).
     #
@@ -61,6 +64,16 @@ module IRC
     # Raises NotImplementedError when not implemented (default).
     def valid?
       raise NotImplementedError, "#{self.class}#valid? is not implemented."
+    end
+
+    # Public: Checks if the message is a numeric reply.
+    def numeric?
+      self.command =~ /^\d+$/
+    end
+
+    # Public: Checks if the message is an error reply according to RFC2812.
+    def error?
+      self.numeric? && ERROR_REPLY_RANGE.cover?(self.command)
     end
 
     # Public: Checks the equality of the trail and other with the "equals 
