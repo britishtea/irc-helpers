@@ -62,6 +62,12 @@ module IRC
       self.to_regexp =~ other
     end
 
+    alias_method :eql?, :==
+
+    def hash
+      self.to_s.hash
+    end
+
     def to_a
       [self.nick, self.user, self.host]
     end

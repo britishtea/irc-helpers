@@ -9,12 +9,12 @@ TestMask = Class.new IRC::Prefix do
   define_singleton_method(:parse) { |*_| ["n?ck", "*", "h*st.com"] }
 end
 
-setup { TestPrefix.new "" }
+setup { TestPrefix.new "nick!user@host.com" }
 
 # Prefix parts
 
 test "the raw prefix" do |prefix|
-  assert_equal prefix.raw, ""
+  assert_equal prefix.raw, "nick!user@host.com"
 end
 
 test "the nick" do |prefix|
@@ -56,6 +56,21 @@ test "#=~ with wildcards" do
   assert      mask =~ "nick!user@host.com"
   assert      mask =~ "nack!user@haast.com"
   assert (not mask =~ "naack!user@haast.com") # ? matches a single character
+end
+
+test "#eql?" do |prefix|
+  mask = TestMask.new "n?ck!*@h*st.com"
+
+  assert      prefix.eql? prefix
+  assert (not prefix.eql? mask)
+
+  assert      mask.eql? mask
+  assert (not mask.eql? prefix)
+end
+
+test "#hash" do |prefix|
+  assert      prefix.hash == prefix.class.new("").hash
+  assert (not prefix.hash == TestMask.new("n?ck!*@h*st.com").hash)
 end
 
 # Conversions
