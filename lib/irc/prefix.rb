@@ -47,24 +47,17 @@ module IRC
     end
 
     # Public: Checks the equality of the prefix and other. The comparison is
-    # case-insensitive (including conversion of []\~ to {}|^, see: 
-    # https://tools.ietf.org/html/rfc2812#section-2.2). Wildcards are 
-    # ignored.
+    # case-insensitive. Wildcards are ignored.
     def ==(other)
       unless other.respond_to? :to_str
         raise TypeError, "no implicit conversion of #{other.class} into String"
       end
 
-      downcased_self  = self.to_s.tr("A-Z[]\\\\~", "a-z{}|^")
-      downcased_other = other.to_str.tr("A-Z[]\\\\~", "a-z{}|^")
-
-      downcased_self == downcased_other
+      finnish_downcase(self.to_s) == finnish_downcase(other.to_str)
     end
 
     # Public: Checks the equality of the prefix and other. The comparison is
-    # case-insensite (including conversion of []\~ to {}|^, see:
-    # https://tools.ietf.org/html/rfc2812#section-2.2). Wildcards are 
-    # honored. Uses #to_regexp under the hood.
+    # case-insensitive. Wildcards are honored.
     def =~(other)
       self.to_regexp =~ other
     end
@@ -78,13 +71,10 @@ module IRC
     end
 
     def to_regexp
-      # This is an ugly hack and should be replaced with something beautiful.
-      escaped  = Regexp.escape to_s
-      prepared = escaped.gsub(/(\\.|~)/) do |char|
-        CONVERSIONS[char[-1,1]] || char
-      end
+      regexp_string = "#{finnish_case_insensitivity @nick}!#{@user}@#{@host}"
+      regexp_string.gsub! /[?*\.]/, "?" => "\\S", "*" => "\\S*", "." => "\\."
 
-      Regexp.new "^#{prepared}$", Regexp::IGNORECASE
+      Regexp.new "^#{regexp_string}$", Regexp::IGNORECASE
     end
 
     def to_s
@@ -95,13 +85,17 @@ module IRC
 
   private
 
-    CONVERSIONS = {
-      '?'  => '\S',
-      '*'  => '\S*',
-      '['  => '(\[|\{)',   '{' => '(\[|\{)',
-      ']'  => '(\]|\})',   '}' => '(\]|\})',
-      '\\' => '(\\\\|\|)', '|' => '(\\\\|\|)', # one of the backslashes will be 
-      '~'  => '(~|\^)',    '^' => '(~|\^)'     # replaced by the gsub. so gross.
-    }
+    # Internal: Replaces non-standard "uppercase" characters with their 
+    # "lowercase". This method is meant to be redefined.
+    def finnish_downcase(string)
+      string.downcase
+    end
+
+    # Internal: Replaces non-standard "uppercase" and "lowercase" with both 
+    # their "uppercase" and "lowercase", Regexp style. This method is meant to
+    # be redefined. Should return a String.
+    def finnish_case_insensitivity(string)
+      string
+    end
 	end
 end

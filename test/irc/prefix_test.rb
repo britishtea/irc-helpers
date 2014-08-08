@@ -9,15 +9,6 @@ TestMask = Class.new IRC::Prefix do
   define_singleton_method(:parse) { |*_| ["n?ck", "*", "h*st.com"] }
 end
 
-# Because of IRC's Scandinavian origin, the characters {}|^ are considered to be
-# the lower case equivalents of the characters []\~, respectively. This is a 
-# critical issue when determining the equivalence of two nicknames or channel 
-# names.
-
-ScandinavianPrefix = Class.new IRC::Prefix do
-  define_singleton_method(:parse) { |*_| ["{}|^abc[]\\~", "user", "host.com"] }
-end
-
 setup { TestPrefix.new "" }
 
 # Prefix parts
@@ -53,15 +44,6 @@ test "#== with wildcards" do
   assert (not mask == "NICK!user@host.com")
 end
 
-test "#== for scandinavians" do
-  scandinavian = ScandinavianPrefix.new "{}|^abc[]\\~!user@host.com"
-  
-  assert scandinavian == "{}|^abc{}|^!user@host.com"
-  assert scandinavian == "{}|^abc[]\\~!user@host.com"
-  assert scandinavian == "[]\\~abc{}|^!user@host.com"
-  assert scandinavian == "[]\\~abc[]\\~!user@host.com"
-end
-
 test "#=~ without wildcards" do |prefix|
   assert prefix =~ "nick!user@host.com"
   assert prefix =~ "NICK!user@host.com"
@@ -74,15 +56,6 @@ test "#=~ with wildcards" do
   assert      mask =~ "nick!user@host.com"
   assert      mask =~ "nack!user@haast.com"
   assert (not mask =~ "naack!user@haast.com") # ? matches a single character
-end
-
-test "#=~ for scandinavians" do
-  scandinavian = ScandinavianPrefix.new "{}|^abc[]\\~!user@host.com"
-
-  assert scandinavian =~ "{}|^abc{}|^!user@host.com"
-  assert scandinavian =~ "{}|^abc[]\\~!user@host.com"
-  assert scandinavian =~ "[]\\~abc{}|^!user@host.com"
-  assert scandinavian =~ "[]\\~abc[]\\~!user@host.com"
 end
 
 # Conversions
@@ -100,13 +73,10 @@ test "to_h" do |prefix|
 end
 
 test "to_regexp" do |prefix|
-  mask         = TestMask.new "n?ck!*@h*st.com"
-  scandinavian = ScandinavianPrefix.new "{}|^abc[]\\~!user@host.com"
+  mask = TestMask.new "n?ck!*@h*st.com"
 
   assert_equal prefix.to_regexp, /^nick!user@host\.com$/i
   assert_equal mask.to_regexp, /^n\Sck!\S*@h\S*st\.com$/i
-  assert_equal scandinavian.to_regexp, # this is motherflippin ridiculous.
-  /^(\[|\{)(\]|\})(\\|\|)(~|\^)abc(\[|\{)(\]|\})(\\|\|)(~|\^)!user@host\.com$/i
 end
 
 test "to_s" do |prefix|
