@@ -10,3 +10,28 @@ end
 test "#valid? is implemented" do |prefix|
   assert prefix.valid?
 end
+
+test "#== for scandinavians" do
+  prefix = IRC::RFC2812::Prefix.new "{}|^abc[]\\~!user@host.com"
+
+  assert prefix == "{}|^abc{}|^!user@host.com"
+  assert prefix == "{}|^abc[]\\~!user@host.com"
+  assert prefix == "[]\\~abc{}|^!user@host.com"
+  assert prefix == "[]\\~abc[]\\~!user@host.com"
+end
+
+test "#=~ for scandinavians" do
+  prefix = IRC::RFC2812::Prefix.new "{}|^abc[]\\~!user@host.com"
+
+  assert prefix =~ "{}|^abc{}|^!user@host.com"
+  assert prefix =~ "{}|^abc[]\\~!user@host.com"
+  assert prefix =~ "[]\\~abc{}|^!user@host.com"
+  assert prefix =~ "[]\\~abc[]\\~!user@host.com"
+end
+
+test "#to_regexp for scandinavians" do
+  prefix = IRC::RFC2812::Prefix.new "{}|^abc[]\\~!user@host.com"
+
+  assert_equal prefix.to_regexp, # this is motherflippin ridiculous.
+  /^(\[|\{)(\]|\})(\\|\|)(~|\^)abc(\[|\{)(\]|\})(\\|\|)(~|\^)!user@host\.com$/i
+end
