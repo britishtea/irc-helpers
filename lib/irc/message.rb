@@ -2,6 +2,8 @@ module IRC
   # Public: Represents a Message. This class is intended to be subclassed. Its
   # `#parse` and `#valid?` methods are not implemented and should be redefined.
   class Message
+    include Comparable
+
     # Public: Parses a raw message. It should return an Array of three elements 
     # (prefix, command, parameters).
     #
@@ -71,6 +73,13 @@ module IRC
     # operator" (`=~`).
     def =~(other)
       self.trail =~ other
+    end
+
+    # Public: Checks the 
+    def <=>(other)
+      return nil unless other.respond_to? :time
+
+      self.time <=> other.time
     end
 
     # Public: Matches the trail of a Message against a pattern, taking into

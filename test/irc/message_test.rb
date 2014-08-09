@@ -45,6 +45,15 @@ test "#=~" do |message|
   assert message =~ /trail/
 end
 
+test "#<=>" do |message|
+  other = Test.new("")
+  
+  assert_equal message <=> other,    -1
+  assert_equal message <=>  message,  0
+  assert_equal other <=> message,     1
+  assert_equal message <=> 0, nil
+end
+
 test "#match" do |message|
   assert      message.match :command, "the trail"
   assert (not message.match :cammond, "the trail")

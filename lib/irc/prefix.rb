@@ -2,6 +2,8 @@ module IRC
   # Public: Represents a Message. This class is intended to be subclassed. Its
   # `#parse` and `#valid?` methods are not implemented and should be redefined.
 	class Prefix
+    include Comparable
+    
     # Public: Parses a raw prefix. It should return an Array of three elements
     # (nick, user, host).
     #
@@ -64,9 +66,15 @@ module IRC
 
     alias_method :eql?, :==
 
+    def <=>(other)
+      return nil unless other.respond_to? :to_str
+      
+      self.to_s <=> other.to_str
+    end
+
     def hash
       self.to_s.hash
-    end
+    end  
 
     def to_a
       [self.nick, self.user, self.host]
