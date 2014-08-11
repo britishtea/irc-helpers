@@ -96,3 +96,16 @@ end
 test "#to_sym" do |message|
   assert_equal message.to_sym, :command
 end
+
+
+class Colored < IRC::Message
+  def self.parse(message)
+    ["", "COMMAND", [message.split(":").last]]
+  end
+end
+
+test "#strip_colors" do
+  msg = Colored.new "COMMAND :a \x0301,01b\x03 c \x0315,15d\x03 e \x0301f\x03 g"
+
+  assert_equal msg.strip_colors, "a b c d e f g" # #== works like this
+end

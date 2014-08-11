@@ -145,5 +145,10 @@ module IRC
       { :prefix     => self.prefix,  :command    => self.command,
         :parameters => self.params,  :trail      => self.trail }
     end
+
+    # Public: Returns a new Message with all mIRC color codes removed.
+    def strip_colors
+      self.class.new self.raw.gsub(/\x03(?:[019]?[0-9](?:,[019]?[0-9])?)?/, "")
+    end
   end
 end
