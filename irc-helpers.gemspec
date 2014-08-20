@@ -17,5 +17,5 @@ Gem::Specification.new do |s|
   s.signing_key   = File.expand_path "~/.gem/gem-private_key.pem"
   s.cert_chain    = ["certs/britishtea.pem"]
 
-  s.add_development_dependency "cutest", "~> 1.2.0"
+  s.add_development_dependency "cutest", "~> 1.2"
 end
