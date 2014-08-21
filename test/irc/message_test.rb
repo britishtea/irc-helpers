@@ -55,8 +55,10 @@ test "#<=>" do |message|
 end
 
 test "#match" do |message|
+  assert      message.match :command
+  assert (not message.match :cammond)
+
   assert      message.match :command, "the trail"
-  assert (not message.match :cammond, "the trail")
   assert (not message.match :command, "the trial")
   
   assert      message.match :command, /trail/

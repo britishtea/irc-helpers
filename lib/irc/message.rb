@@ -102,7 +102,6 @@ module IRC
     #
     # command - The command Symbol.
     # params  - An Array of parameters (defaults to []).
-    # pattern - A String or Regexp pattern.
     # block   - The block that should be executed.
     #
     # Examples
@@ -115,25 +114,31 @@ module IRC
     #     "..."
     #   end
     # 
-    #   message.match :command, ["parameter"], "pattern" do
+    #   message.match :command, "parameter", "pattern" do
+    #     "..."
+    #   end
+    # 
+    #   message.match :command, "oarameter", nil do
     #     "..."
     #   end
     #
     # Returns false if pattern does not match.
     # Returns true or the result of the block if the pattern does match.
-    def match(command, *params, pattern, &block)
+    def match(command, *params, &block)
+      pattern = params.pop
+
       return false unless self.command == command
       return false unless self.params[0..-2] == params || params.empty?
 
       block ||= -> * { true } 
 
-      if pattern.is_a? Regexp
+      if pattern.nil?
+        return true
+      elsif pattern.is_a? Regexp
         matchdata = self.trail.match pattern
         return matchdata.nil? ? false : block.call(*matchdata.captures)
       elsif pattern.respond_to?(:to_str) && self.trail == pattern
         return block.call
-      else
-        return false
       end
     end
 
