@@ -100,7 +100,7 @@ module IRC
     # (plus command and parameters) matches. If `pattern` is a Regexp, the block
     # receives its captures as arguments.
     #
-    # command - The command Symbol.
+    # command - A command Symbol, String or Integer.
     # params  - An Array of parameters (defaults to []).
     # block   - The block that should be executed.
     #
@@ -127,10 +127,10 @@ module IRC
     def match(command, *params, &block)
       pattern = params.pop
 
-      return false unless self.command == command
+      return false unless command_matches?(command)
       return false unless self.params[0..-2] == params || params.empty?
 
-      block ||= -> * { true } 
+      block ||= -> * { true }
 
       if pattern.nil?
         return true
@@ -167,6 +167,27 @@ module IRC
     # Public: Returns a new Message with all mIRC color codes removed.
     def strip_colors
       self.class.new self.raw.gsub(/\x03(?:[019]?[0-9](?:,[019]?[0-9])?)?/, "")
+    end
+
+  private
+
+    # Internal: Checks if the command matches `command`. Neccessary to correctly
+    # match :"001" and 001.
+    #
+    # command - A Numeric, Symbol or String.
+    #
+    # Returns a Boolean.
+    def command_matches?(command)
+      case command
+        when Numeric then
+          return false unless self.command.to_s.to_i == command.to_i
+        when Symbol  then
+          return false unless self.command == command.to_sym
+        else
+          return false unless self.command.to_s == command.to_s
+      end
+
+      return true
     end
   end
 end

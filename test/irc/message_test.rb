@@ -3,16 +3,16 @@ require "irc/message"
 
 class Test < IRC::Message
   def self.parse(*_)
-    ["prefix", "COMMAND", ["one", "two", "three", "the trail"]]
+    ["prefix", "001", ["one", "two", "three", "the trail"]]
   end
 end
 
-setup { Test.new "" }
+setup { Test.new ":prefix 001 one two three :the trail" }
 
 # Message parts
 
 test "the raw message" do |message|
-  assert_equal message.raw, ""
+  assert_equal message.raw, ":prefix 001 one two three :the trail"
 end
 
 test "the prefix" do |message|
@@ -20,7 +20,7 @@ test "the prefix" do |message|
 end
 
 test "the command" do |message|
-  assert_equal message.command, :command
+  assert_equal message.command, :"001"
 end
 
 test "the parameters" do |message|
@@ -55,19 +55,25 @@ test "#<=>" do |message|
 end
 
 test "#match" do |message|
-  assert      message.match :command
-  assert (not message.match :cammond)
+  assert      message.match :"001"
+  assert (not message.match :"002")
 
-  assert      message.match :command, "the trail"
-  assert (not message.match :command, "the trial")
+  assert      message.match "001"
+  assert (not message.match "002")
+
+  assert      message.match 001
+  assert (not message.match 002)
+
+  assert      message.match :"001", "the trail"
+  assert (not message.match :"001", "the trial")
   
-  assert      message.match :command, /trail/
-  assert (not message.match :command, /trial/)
+  assert      message.match :"001", /trail/
+  assert (not message.match :"001", /trial/)
 
-  assert      message.match :command, *%w(one two three), "the trail"
-  assert (not message.match :command, *%w(three two one), "the trail")
+  assert      message.match :"001", *%w(one two three), "the trail"
+  assert (not message.match :"001", *%w(three two one), "the trail")
 
-  message.match :command, /the (\S+)/ do |capture|
+  message.match :"001", /the (\S+)/ do |capture|
     assert_equal capture, "trail"
   end
 end
@@ -75,13 +81,13 @@ end
 # Conversions
 
 test "#to_a" do |message|
-  assert_equal message.to_a, ["prefix", :command, ["one", "two", "three", "the trail"]]
+  assert_equal message.to_a, ["prefix", :"001", ["one", "two", "three", "the trail"]]
 end
 
 test "#to_h" do |message|
   assert_equal message.to_h, {
     :prefix     => "prefix",
-    :command    => :command,
+    :command    => :"001",
     :parameters => ["one", "two", "three", "the trail"],
     :trail      => "the trail"
   }
@@ -96,7 +102,7 @@ test "#to_str" do |message|
 end
 
 test "#to_sym" do |message|
-  assert_equal message.to_sym, :command
+  assert_equal message.to_sym, :"001"
 end
 
 
