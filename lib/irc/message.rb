@@ -51,7 +51,7 @@ module IRC
 
       @raw     = raw
       @prefix  = parsed[0] # TODO: Maybe store a Prefix. But how to know which one?
-      @command = parsed[1].downcase.to_sym
+      @command = String(parsed[1]).downcase.to_sym
       @params  = parsed[2]
       @trail   = parsed[2].last
       @time    = Time.now
