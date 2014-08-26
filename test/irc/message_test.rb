@@ -39,6 +39,7 @@ end
 
 test "#==" do |message|
   assert message == "the trail"
+  assert message == message.class.new("the trail")
 end
 
 test "#=~" do |message|

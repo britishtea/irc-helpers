@@ -66,7 +66,11 @@ module IRC
     # Public: Checks the equality of the trail and other with the "equals 
     # operator" (`==`).
     def ==(other)
-      self.trail == other
+      unless other.respond_to? :to_str
+        raise TypeError, "no implicit conversion of #{other.class} into String"
+      end
+
+      self.trail == other.to_str
     end
 
     # Public: Checks the equality of the trail and other with the "spermy 
