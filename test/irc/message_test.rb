@@ -9,6 +9,8 @@ end
 
 setup { Test.new ":prefix 001 one two three :the trail" }
 
+prepare { $test = nil }
+
 # Message parts
 
 test "the raw message" do |message|
@@ -73,10 +75,42 @@ test "#match" do |message|
 
   assert      message.match :"001", *%w(one two three), "the trail"
   assert (not message.match :"001", *%w(three two one), "the trail")
+end
 
-  message.match :"001", /the (\S+)/ do |capture|
-    assert_equal capture, "trail"
-  end
+test "#match with a block" do |message|
+  message.match(:"001") { $test = true }
+  message.match(:"002") { $test = false }
+  
+  assert_equal $test, true
+
+  message.match("001") { $test = true }
+  message.match("002") { $test = false }
+  
+  assert_equal $test, true
+
+  message.match(001) { $test = true }
+  message.match(002) { $test = false }
+  
+  assert_equal $test, true
+
+  message.match(:"001", "the trail") { $test = true }
+  message.match(:"001", "the trial") { $test = false }
+
+  assert_equal $test, true
+
+  message.match(:"001", /trail/) { $test = true }
+  message.match(:"001", /trial/) { $test = false }
+
+  assert_equal $test, true
+
+  message.match(:"001", /the (\S+)/) { |capture| $test = capture }
+  
+  assert_equal $test, "trail"
+
+  message.match(:"001", *%w(one two three), "the trail") { $test = true }
+  message.match(:"001", *%w(three two one), "the trail") { $test = false }
+
+  assert_equal $test, true
 end
 
 # Conversions

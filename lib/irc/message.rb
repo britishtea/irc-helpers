@@ -124,7 +124,7 @@ module IRC
       block ||= -> * { true }
 
       if pattern.nil?
-        return true
+        return block.call
       elsif pattern.is_a? Regexp
         matchdata = self.trail.match pattern
         return matchdata.nil? ? false : block.call(*matchdata.captures)
