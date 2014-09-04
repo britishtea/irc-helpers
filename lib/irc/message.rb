@@ -63,23 +63,30 @@ module IRC
       raise NotImplementedError, "#{self.class}#valid? is not implemented."
     end
 
-    # Public: Checks the equality of the trail and other with the "equals 
-    # operator" (`==`).
+    # Public: Checks the equality. If `other` is an IRC::Message the raw message
+    # is compared. If a String-like object (responds to #to_str) is given, the
+    # trail of the message is compared.
+    #
+    # other - An IRC::Message or String-like object.
     def ==(other)
-      unless other.respond_to? :to_str
+      if other.respond_to? :raw
+        return self.raw.chomp == other.raw.chomp
+      elsif other.respond_to? :to_str
+        self.trail == other.to_str
+      else
         raise TypeError, "no implicit conversion of #{other.class} into String"
       end
-
-      self.trail == other.to_str
     end
 
     # Public: Checks the equality of the trail and other with the "spermy 
     # operator" (`=~`).
+    #
+    # other - A String or regexp.
     def =~(other)
       self.trail =~ other
     end
 
-    # Public: Checks the 
+    # Public: ...
     def <=>(other)
       return nil unless other.respond_to? :time
 

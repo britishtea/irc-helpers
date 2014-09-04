@@ -41,7 +41,8 @@ end
 
 test "#==" do |message|
   assert message == "the trail"
-  assert message == message.class.new("the trail")
+  assert message == message.class.new(":prefix 001 one two three :the trail")
+  assert_equal message == message.class.new("PRIVMSG #chan :the trail"), false
 end
 
 test "#=~" do |message|
