@@ -532,10 +532,6 @@ module IRC
       def self.raw(message)
         message
       end
-
-      def raw(*args)
-        raise NotImplementedError, "#{self.class}#raw not defined."
-      end
     end
   end
 end
