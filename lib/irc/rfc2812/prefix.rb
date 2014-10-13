@@ -15,7 +15,7 @@ module IRC
     private
 
       def finnish_downcase(string)
-        string.gsub /[\[\]\\~]/, "[" => "{", "]" => "}", "\\" => "|", "~" => "^"
+        string.tr "[]~\\", "{}^|"
       end
 
       def finnish_case_insensitivity(string)
