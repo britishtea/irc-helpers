@@ -31,7 +31,8 @@ module IRC
       #
       # message - A message String.
       #
-      # Return an Array of form ["prefix", "command", ["param", "param"]].
+      # Return an Array of form `["prefix", "command", ["param", "param"], 
+      # "the trail"]`.
       def parse(message)
         if message.start_with? ":"
           prefix, command, parameters = message[1..-1].strip.split(" ", 3)
@@ -42,13 +43,14 @@ module IRC
         if parameters.nil?
           parameters = []
         elsif parameters.start_with? ":"
-          parameters = [parameters[1..-1]]
+          trailing   = parameters[1..-1]
+          parameters = []
         else
           parameters, trailing = parameters.split(" :", 2)
-          parameters = parameters.split(" ") << trailing
+          parameters = parameters.split(" ")
         end
 
-        return [prefix, command, parameters.compact]
+        return [prefix, command, parameters.compact, trailing]
       end
 
       # Public: Parses an IRC prefix.

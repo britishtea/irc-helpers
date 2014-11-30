@@ -4,17 +4,17 @@ module IRC
   class Message
     include Comparable
 
-    # Public: Parses a raw message. It should return an Array of three elements 
-    # (prefix, command, parameters).
+    # Public: Parses a raw message. It should return an Array of four elements 
+    # (prefix, command, parameters, trail).
     #
     # raw_message - The raw message String.
     #
     # Examples
     #
     #   Message.parse(":prefix COMMAND parameter :the trail")
-    #   # => ["prefix", "COMMAND", ["parameter", "the trail"]]
+    #   # => ["prefix", "COMMAND", ["parameter"], "the trail"]
     #
-    # Returns an Array of three elements.
+    # Returns an Array of four elements.
     # Raises NotImplementedError when not implemented (default).
     def self.parse(raw_message)
       raise NotImplementedError, "#{self}.parse is not implemented."
@@ -31,7 +31,7 @@ module IRC
 
     alias_method :to_sym, :command
 
-    # Public: Gets the parameters Array. It includes the trail.
+    # Public: Gets the parameters Array. It does not include the trail.
     attr_reader :params
 
     # Public: Gets the trail String.
@@ -44,13 +44,13 @@ module IRC
     attr_reader :time
 
     def initialize(raw)
-      parsed   = self.class.parse raw
+      parsed = self.class.parse raw
 
       @raw     = raw
       @prefix  = parsed[0] # TODO: Maybe store a Prefix. But how to know which one?
       @command = String(parsed[1]).downcase.to_sym
       @params  = parsed[2]
-      @trail   = parsed[2].last
+      @trail   = parsed[3]
       @time    = Time.now
     end
 
@@ -116,7 +116,7 @@ module IRC
     #     "..."
     #   end
     # 
-    #   message.match :command, "oarameter", nil do
+    #   message.match :command, "parameter", nil do
     #     "..."
     #   end
     #
@@ -126,7 +126,7 @@ module IRC
       pattern = params.pop
 
       return false unless command_matches?(command)
-      return false unless self.params[0..-2] == params || params.empty?
+      return false unless self.params == params || params.empty?
 
       block ||= -> * { true }
 
@@ -145,7 +145,7 @@ module IRC
     #
     # Returns an Array.
     def to_a
-      [self.prefix, self.command, self.params]
+      [self.prefix, self.command, self.params, self.trail]
     end
 
     # Public: Returns a Hash of the following form: 

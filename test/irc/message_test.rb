@@ -3,7 +3,7 @@ require "irc/message"
 
 class Test < IRC::Message
   def self.parse(*_)
-    ["prefix", "001", ["one", "two", "three", "the trail"]]
+    ["prefix", "001", ["one", "two", "three"], "the trail"]
   end
 end
 
@@ -26,11 +26,21 @@ test "the command" do |message|
 end
 
 test "the parameters" do |message|
-  assert_equal message.params, ["one", "two", "three", "the trail"]
+  assert_equal message.params, ["one", "two", "three"]
 end
 
 test "the trail" do |message|
   assert_equal message.trail, "the trail"
+
+  without_trail = Class.new(message.class) do |variable|
+    def self.parse(*_)
+      ["prefix", "001", ["one", "two", "three"], nil]
+    end
+  end
+
+  message = without_trail.new ":prefix 001 one two three"
+
+  assert_equal message.trail, nil
 end
 
 test "the time" do |message|
@@ -117,14 +127,24 @@ end
 # Conversions
 
 test "#to_a" do |message|
-  assert_equal message.to_a, ["prefix", :"001", ["one", "two", "three", "the trail"]]
+  assert_equal message.to_a, ["prefix", :"001", ["one", "two", "three"], "the trail"]
+
+  without_trail = Class.new(message.class) do
+    def self.parse(*_)
+      ["prefix", "COMMAND", [], false]
+    end
+  end
+
+  message = without_trail.new("prefix COMMAND")
+
+  assert_equal message.to_a, ["prefix", :command, [], false]
 end
 
 test "#to_h" do |message|
   assert_equal message.to_h, {
     :prefix     => "prefix",
     :command    => :"001",
-    :parameters => ["one", "two", "three", "the trail"],
+    :parameters => ["one", "two", "three"],
     :trail      => "the trail"
   }
 end
@@ -144,12 +164,13 @@ end
 
 class Colored < IRC::Message
   def self.parse(message)
-    ["", "COMMAND", [message.split(":").last]]
+    ["", "COMMAND", [], message.split(":").last]
   end
 end
 
 test "#strip_colors" do
   msg = Colored.new "COMMAND :a \x0301,01b\x03 c \x0315,15d\x03 e \x0301f\x03 g"
 
+  assert msg.strip_colors.object_id != msg.object_id
   assert_equal msg.strip_colors, "a b c d e f g" # #== works like this
 end

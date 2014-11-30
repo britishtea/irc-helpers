@@ -5,35 +5,35 @@ setup { IRC::RFC2812::Helpers }
 
 test "#parse" do |helpers|
   input  = ":prefix COMMAND param param :the trail\r\n"
-  output = ["prefix", "COMMAND", ["param", "param", "the trail"]]
+  output = ["prefix", "COMMAND", ["param", "param"], "the trail"]
   assert_equal helpers.parse(input), output
 
   input  = "COMMAND param param :the trail\r\n"
-  output = [nil, "COMMAND", ["param", "param", "the trail"]]
+  output = [nil, "COMMAND", ["param", "param"], "the trail"]
   assert_equal helpers.parse(input), output
 
   input  = ":prefix COMMAND param param\r\n"
-  output = ["prefix", "COMMAND", ["param", "param"]]
+  output = ["prefix", "COMMAND", ["param", "param"], nil]
   assert_equal helpers.parse(input), output
 
   input  = "COMMAND param param\r\n"
-  output = [nil, "COMMAND", ["param", "param"]]
+  output = [nil, "COMMAND", ["param", "param"], nil]
   assert_equal helpers.parse(input), output
 
   input  = ":prefix COMMAND :the trail\r\n"
-  output = ["prefix", "COMMAND", ["the trail"]]
+  output = ["prefix", "COMMAND", [], "the trail"]
   assert_equal helpers.parse(input), output
 
   input  = "COMMAND :the trail\r\n"
-  output = [nil, "COMMAND", ["the trail"]]
+  output = [nil, "COMMAND", [], "the trail"]
   assert_equal helpers.parse(input), output
 
   input  = ":prefix COMMAND\r\n"
-  output = ["prefix", "COMMAND", []]
+  output = ["prefix", "COMMAND", [], nil]
   assert_equal helpers.parse(input), output
 
   input  = "COMMAND\r\n"
-  output = [nil, "COMMAND", []]
+  output = [nil, "COMMAND", [], nil]
   assert_equal helpers.parse(input), output
 end
 
