@@ -82,14 +82,13 @@ module IRC
       self.trail =~ other
     end
 
-    # Public: Matches the trail of a Message against a pattern, taking into
-    # account the command and the parameters. Executes the block if the pattern
-    # (plus command and parameters) matches. If `pattern` is a Regexp, the block
-    # receives its captures as arguments.
+    # Public: Checks the command for equality. Optionally takes a pattern (a 
+    # String or Regexp) which is checked for equality against the trail. If a 
+    # block is given it is executed when both the command and the pattern match.
     #
     # command - A command Symbol, String or Integer.
-    # params  - An Array of parameters (defaults to []).
-    # block   - The block that should be executed.
+    # pattern - A String or Regexp pattern (default: nil).
+    # block   - The block that should be executed (optional).
     #
     # Examples
     # 
@@ -100,33 +99,33 @@ module IRC
     #   message.match :command, /^!help (\S+)$/ do |plugin|
     #     "..."
     #   end
-    # 
-    #   message.match :command, "parameter", "pattern" do
-    #     "..."
-    #   end
-    # 
-    #   message.match :command, "parameter", nil do
-    #     "..."
-    #   end
     #
     # Returns false if pattern does not match.
     # Returns true or the result of the block if the pattern does match.
-    def match(command, *params, &block)
-      pattern = params.pop
+    def match(command, pattern = nil, &block)
+      unless command_matches?(command)
+        return false
+      end 
 
-      return false unless command_matches?(command)
-      return false unless self.params == params || params.empty?
-
-      block ||= -> * { true }
-
-      if pattern.nil?
-        return block.call
-      elsif pattern.is_a? Regexp
-        matchdata = self.trail.match pattern
-        return matchdata.nil? ? false : block.call(*matchdata.captures)
-      elsif pattern.respond_to?(:to_str) && self.trail == pattern
-        return block.call
+      unless block_given?
+        block = proc { true }
       end
+
+      if pattern.nil? || (pattern.respond_to?(:to_str) && self == pattern)
+        block.call
+      elsif pattern.respond_to?(:match)
+        matchdata = pattern.match(self.trail) 
+
+        if matchdata.nil?
+          return false
+        end
+        
+        block.call(*matchdata.captures)
+      else
+        return false
+      end
+
+      return true
     end
 
     # Public: Returns a new Message with all mIRC color codes removed.
