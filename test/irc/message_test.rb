@@ -117,39 +117,12 @@ end
 
 # Conversions
 
-test "#to_a" do |message|
-  assert_equal message.to_a, ["prefix", :"001", ["one", "two", "three"], "the trail"]
-
-  without_trail = Class.new(message.class) do
-    def self.parse(*_)
-      ["prefix", "COMMAND", [], false]
-    end
-  end
-
-  message = without_trail.new("prefix COMMAND")
-
-  assert_equal message.to_a, ["prefix", :command, [], false]
-end
-
-test "#to_h" do |message|
-  assert_equal message.to_h, {
-    :prefix     => "prefix",
-    :command    => :"001",
-    :parameters => ["one", "two", "three"],
-    :trail      => "the trail"
-  }
-end
-
 test "#to_s" do |message|
   assert_equal message.to_s, "the trail"
 end
 
 test "#to_str" do |message|
   assert_equal message.to_str, "the trail"
-end
-
-test "#to_sym" do |message|
-  assert_equal message.to_sym, :"001"
 end
 
 

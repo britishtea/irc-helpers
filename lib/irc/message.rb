@@ -27,8 +27,6 @@ module IRC
     # Public: Gets the command Symbol.
     attr_reader :command
 
-    alias_method :to_sym, :command
-
     # Public: Gets the parameters Array. It does not include the trail.
     attr_reader :params
 
@@ -129,28 +127,6 @@ module IRC
       elsif pattern.respond_to?(:to_str) && self.trail == pattern
         return block.call
       end
-    end
-
-    # Public: Returns an Array of the following form: `["prefix", :command, 
-    # ["parameters","including","trail"]]`.
-    #
-    # Returns an Array.
-    def to_a
-      [self.prefix, self.command, self.params, self.trail]
-    end
-
-    # Public: Returns a Hash of the following form: 
-    #     { 
-    #       :prefix     => "prefix", 
-    #       :command    => :command,
-    #       :parameters => ["parameters", "including", "trail"], 
-    #       :trail      => "trail"
-    #     }
-    #
-    # Returns a Hash.
-    def to_h
-      { :prefix     => self.prefix,  :command    => self.command,
-        :parameters => self.params,  :trail      => self.trail }
     end
 
     # Public: Returns a new Message with all mIRC color codes removed.

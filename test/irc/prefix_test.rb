@@ -75,18 +75,6 @@ end
 
 # Conversions
 
-test "to_a" do |prefix|
-  assert_equal prefix.to_a, ["nick", "user", "host.com"]
-end
-
-test "to_h" do |prefix|
-  assert_equal prefix.to_h, { 
-    :nick => "nick", 
-    :user => "user", 
-    :host => "host.com"
-  }
-end
-
 test "to_regexp" do |prefix|
   mask = TestMask.new "n?ck!*@h*st.com"
 

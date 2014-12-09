@@ -66,14 +66,6 @@ module IRC
 
     def hash
       self.to_s.hash
-    end  
-
-    def to_a
-      [self.nick, self.user, self.host]
-    end
-
-    def to_h
-      { :nick => self.nick, :user => self.user, :host => self.host }
     end
 
     def to_regexp
