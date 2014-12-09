@@ -68,13 +68,6 @@ test "#eql?" do |prefix|
   assert (not mask.eql? prefix)
 end
 
-test "#<=>" do |prefix|
-  assert_equal prefix <=> "oick!user@host.com", -1
-  assert_equal prefix <=> "nick!user@host.com",  0
-  assert_equal prefix <=> "mick!user@host.com",  1
-  assert_equal prefix <=> 0, nil
-end
-
 test "#hash" do |prefix|
   assert      prefix.hash == prefix.class.new("").hash
   assert (not prefix.hash == TestMask.new("n?ck!*@h*st.com").hash)
