@@ -13,19 +13,19 @@ setup { TestPrefix.new "nick!user@host.com" }
 
 # Prefix parts
 
-test "the raw prefix" do |prefix|
+test "#raw" do |prefix|
   assert_equal prefix.raw, "nick!user@host.com"
 end
 
-test "the nick" do |prefix|
+test "#nick" do |prefix|
   assert_equal prefix.nick, "nick"
 end
 
-test "the user" do |prefix|
+test "#user" do |prefix|
   assert_equal prefix.user, "user"
 end
 
-test "the host" do |prefix|
+test "#host" do |prefix|
   assert_equal prefix.host, "host.com"
 end
 
@@ -75,17 +75,17 @@ end
 
 # Conversions
 
-test "to_regexp" do |prefix|
+test "#to_regexp" do |prefix|
   mask = TestMask.new "n?ck!*@h*st.com"
 
   assert_equal prefix.to_regexp, /^nick!user@host\.com$/i
   assert_equal mask.to_regexp, /^n\Sck!\S*@h\S*st\.com$/i
 end
 
-test "to_s" do |prefix|
+test "#to_s" do |prefix|
   assert_equal prefix.to_s, "nick!user@host.com"
 end
 
-test "to_str" do |prefix|
+test "#to_str" do |prefix|
   assert_equal prefix.to_str, "nick!user@host.com"
 end

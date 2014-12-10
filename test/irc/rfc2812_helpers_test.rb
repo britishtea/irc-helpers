@@ -64,14 +64,7 @@ test "#valid?" do |helpers|
   assert !helpers.valid?(":prefix COMMAND para meter :trail")
 
   # Longer than 512 characters
-  assert !helpers.valid?(":prefix COMMAND param :  the trail the trail the " \
-    "trail the trail the trail the trail the trail the trail the trail the " \
-    "trail the trail the trail the trail the trail the trail the trail the " \
-    "trail the trail the trail the trail the trail the trail the trail the " \
-    "trail the trail the trail the trail the trail the trail the trail the " \
-    "trail the trail the trail the trail the trail the trail the trail the " \
-    "trail the trail the trail the trail the trail the trail the trail the " \
-    "trail the trail the trail the trail the trail\r\n")
+  assert !helpers.valid?(":prefix COMMAND param :#{"." * 600}\r\n")
 
   # Includes a NUL character.
   assert !helpers.valid?(":prefix COMMAND para meter :the trail \x00\r\n")
