@@ -126,11 +126,19 @@ end
 test "#privmsg" do |c|
   message = c.privmsg "jto@tolsun.oulu.fi", "Hello !"
   assert_equal message, "PRIVMSG jto@tolsun.oulu.fi :Hello !\r\n"
+
+  message = c.privmsg "jto@tolsun.oulu.fi", "." * 600
+  assert_equal message, "PRIVMSG jto@tolsun.oulu.fi :#{"." * 480}\r\n" \
+    "PRIVMSG jto@tolsun.oulu.fi :#{"." * 120}\r\n"
 end
 
 test "#notice" do |c|
   message = c.notice "jto@tolsun.oulu.fi", "Hello !"
   assert_equal message, "NOTICE jto@tolsun.oulu.fi :Hello !\r\n"
+
+  message = c.notice "jto@tolsun.oulu.fi", "." * 600
+  assert_equal message, "NOTICE jto@tolsun.oulu.fi :#{"." * 481}\r\n" \
+    "NOTICE jto@tolsun.oulu.fi :#{"." * 119}\r\n"
 end
 
 # Server queries and cs
@@ -281,6 +289,9 @@ end
 
 test "#wallops" do |c|
   assert_equal c.wallops("Text to be sent"), "WALLOPS :Text to be sent\r\n"
+
+  message = c.wallops("." * 600)
+  assert_equal message, "WALLOPS :#{"." * 499}\r\nWALLOPS :#{"." * 101}\r\n"
 end
 
 test "#userhost" do |c|

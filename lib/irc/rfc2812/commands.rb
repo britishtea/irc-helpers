@@ -19,6 +19,18 @@ module IRC
     #   x = Connection.new
     #   x.join "#channel"
     module Commands
+      module Helpers
+        MAX_LENGTH = 510
+
+        def self.splitted(prefix, trail)
+          len = MAX_LENGTH - prefix.length - 4 # CLRF and " :"
+
+          trail.scan(/.{0,#{len}}/).reject(&:empty?).inject("") do |a, t|
+            a << prefix << " :" << t << "\r\n"
+          end
+        end
+      end
+      
       extend self
 
       # Connection Registration Commands.
@@ -241,7 +253,7 @@ module IRC
       # receiver - The nickname, channel name, host mask, server mask String.
       # message  - The message String.
       def privmsg(receiver, message)
-        raw "PRIVMSG #{receiver} :#{message}\r\n"
+        raw Helpers.splitted("PRIVMSG #{receiver}", message)
       end
 
       # Public: Sends a NOTICE command.
@@ -249,7 +261,7 @@ module IRC
       # receiver - The nickname, channel name, host mask or server mask String.
       # message  - The message String.
       def notice(receiver, message)
-        raw "NOTICE #{receiver} :#{message}\r\n"
+        raw Helpers.splitted("NOTICE #{receiver}", message)
       end
 
       # Server Queries
@@ -510,7 +522,7 @@ module IRC
       #
       # text - A text String.
       def wallops(text)
-        raw "WALLOPS :#{text}\r\n"
+        raw Helpers.splitted("WALLOPS", text)
       end
 
       # Public: Sends an USERHOST command. The USERHOST command requests a list
