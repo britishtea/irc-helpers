@@ -127,6 +127,8 @@ test "#privmsg" do |c|
   message = c.privmsg "jto@tolsun.oulu.fi", "Hello !"
   assert_equal message, "PRIVMSG jto@tolsun.oulu.fi :Hello !\r\n"
 
+  assert_equal c.privmsg("jto@tolsun.oulu.fi", nil), ""
+
   message = c.privmsg "jto@tolsun.oulu.fi", "." * 600
   assert_equal message, "PRIVMSG jto@tolsun.oulu.fi :#{"." * 480}\r\n" \
     "PRIVMSG jto@tolsun.oulu.fi :#{"." * 120}\r\n"
@@ -135,6 +137,8 @@ end
 test "#notice" do |c|
   message = c.notice "jto@tolsun.oulu.fi", "Hello !"
   assert_equal message, "NOTICE jto@tolsun.oulu.fi :Hello !\r\n"
+
+  assert_equal c.notice("jto@tolsun.oulu.fi", nil), ""
 
   message = c.notice "jto@tolsun.oulu.fi", "." * 600
   assert_equal message, "NOTICE jto@tolsun.oulu.fi :#{"." * 481}\r\n" \

@@ -253,7 +253,7 @@ module IRC
       # receiver - The nickname, channel name, host mask, server mask String.
       # message  - The message String.
       def privmsg(receiver, message)
-        raw Helpers.splitted("PRIVMSG #{receiver}", message)
+        raw Helpers.splitted("PRIVMSG #{receiver}", message.to_s)
       end
 
       # Public: Sends a NOTICE command.
@@ -261,7 +261,7 @@ module IRC
       # receiver - The nickname, channel name, host mask or server mask String.
       # message  - The message String.
       def notice(receiver, message)
-        raw Helpers.splitted("NOTICE #{receiver}", message)
+        raw Helpers.splitted("NOTICE #{receiver}", message.to_s)
       end
 
       # Server Queries
