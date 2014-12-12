@@ -113,8 +113,8 @@ module IRC
 
       if pattern.nil? || (pattern.respond_to?(:to_str) && self == pattern)
         block.call
-      elsif pattern.respond_to?(:match)
-        matchdata = pattern.match(self.trail) 
+      elsif pattern.is_a?(Regexp)
+        matchdata = pattern.match(self.trail)
 
         if matchdata.nil?
           return false

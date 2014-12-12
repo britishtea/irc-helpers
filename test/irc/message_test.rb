@@ -106,8 +106,9 @@ test "#match command and pattern" do |message|
   assert      message.match :"001", "the trail"
   assert (not message.match :"001", "the trial")
 
-  message.match(:"001", "the trail") { $test = true }
-  message.match(:"001", "the trial") { $test = false }
+  message.match(:"001", "the trail")  { $test = true }
+  message.match(:"001", "the trail!") { $test = false }
+  message.match(:"001", "the trial")  { $test = false }
 
   assert_equal $test, true
 
