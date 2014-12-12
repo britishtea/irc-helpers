@@ -1,3 +1,5 @@
 require "irc/rfc2812/commands"
 require "irc/rfc2812/constants"
 require "irc/rfc2812/helpers"
+require "irc/rfc2812/message"
+require "irc/rfc2812/prefix"
