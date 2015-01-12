@@ -15,11 +15,11 @@ module IRC
     private
 
       def finnish_downcase(string)
-        string.tr "[]~\\", "{}^|"
+        string.downcase.tr "[]~\\", "{}^|"
       end
 
       def finnish_case_insensitivity(string)
-        string.gsub /[\{ \} \\ ~ \[ \] \| ^]/, 
+        string.downcase.gsub /[\{ \} \\ ~ \[ \] \| ^]/, 
           "["    => "(\\[|\\{)",    "{" => "(\\[|\\{)",
           "]"    => "(\\]|\\})",    "}" => "(\\]|\\})",
           "\\" => "(\\\\|\\|)",     "|" => "(\\\\|\\|)",
