@@ -1,23 +1,10 @@
 module IRC
   # Public: Represents a Message. This class is intended to be subclassed. Its
-  # `#parse` and `#valid?` methods are not implemented and should be redefined.
+  # `.parse` and `#valid?` methods are not implemented and should be redefined.
+  #
+  # .parse should take a String and return a three-element Array.
+  # #valid? should return true or false.
 	class Prefix
-    # Public: Parses a raw prefix. It should return an Array of three elements
-    # (nick, user, host).
-    #
-    # raw_prefix - A raw prefix String.
-    #
-    # Examples
-    #
-    #   Prefix.parse("nick!user@host.com")
-    #   # => ["nick", "user", "host.com"]
-    #
-    # Returns an Array of three elements.
-    # Raises NotImplementedError when not implemented (default).
-    def self.parse(raw_prefix)
-      raise NotImplementedError, "#{self}.parse is not implemented."
-    end
-
     # Public: Gets the raw message String.
     attr_reader :raw
 
@@ -30,20 +17,25 @@ module IRC
     # Public: Gets the host String.
     attr_reader :host
 
-    # Public: Initializes the prefix.
-    def initialize(raw_prefix)
-      @raw = raw_prefix
-
-      @nick, @user, @host = self.class.parse raw_prefix
-    end
-
-    # Public: Checks the prefix for validity. It should return `true` when the 
-    # prefix is valid, `false` otherwise.
+    # Public: Initializes the prefix. If both `user` and `host` are `nil`,
+    # assumes `raw_prefix` to be a prefix String (e.g. `"nick!user@host.com"`).
     #
-    # Returns true or false.
-    # Raises NotImplementedError when not implemented (default).
-    def valid?
-      raise NotImplementedError, "#{self.class}#valid? is not implemented."
+    # raw_prefix - A raw prefix String *or* a nickname String.
+    # user       - A username String (default: nil).
+    # host       - A hostname String (default: nil).
+    #
+    # Examples
+    #
+    #   IRC::Prefix.new("nick!user@host.com")
+    #   IRC::Prefix.new("nick", "user", "host.com")
+    def initialize(raw_prefix, user = nil, host = nil)
+      if user.nil? && host.nil?
+        @raw = raw_prefix
+        @nick, @user, @host = self.class.parse(raw_prefix)
+      else
+        @nick, @user, @host = raw_prefix, user, host
+        @raw = to_s
+      end
     end
 
     # Public: Checks the equality of the prefix and other. The comparison is
@@ -69,7 +61,7 @@ module IRC
     end
 
     def to_regexp
-      regexp_string = "#{finnish_case_insensitivity @nick}!#{@user}@#{@host}"
+      regexp_string = finnish_case_insensitivity(to_s)
       regexp_string.gsub! /[?*\.]/, "?" => "\\S", "*" => "\\S*", "." => "\\."
 
       Regexp.new "^#{regexp_string}$", Regexp::IGNORECASE

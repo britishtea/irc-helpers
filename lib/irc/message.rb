@@ -1,23 +1,10 @@
 module IRC
   # Public: Represents a Message. This class is intended to be subclassed. Its
-  # `#parse` and `#valid?` methods are not implemented and should be redefined.
+  # `.parse` and `#valid?` methods are not implemented and should be redefined.
+  #
+  # .parse should take a message String and return a four-element Array.
+  # #valid? should return true or false.
   class Message
-    # Public: Parses a raw message. It should return an Array of four elements 
-    # (prefix, command, parameters, trail).
-    #
-    # raw_message - The raw message String.
-    #
-    # Examples
-    #
-    #   Message.parse(":prefix COMMAND parameter :the trail")
-    #   # => ["prefix", "COMMAND", ["parameter"], "the trail"]
-    #
-    # Returns an Array of four elements.
-    # Raises NotImplementedError when not implemented (default).
-    def self.parse(raw_message)
-      raise NotImplementedError, "#{self}.parse is not implemented."
-    end
-
     # Public: Gets the raw message String.
     attr_reader :raw
 
@@ -48,15 +35,6 @@ module IRC
       @params  = parsed[2]
       @trail   = parsed[3]
       @time    = Time.now
-    end
-
-    # Public: Checks a the message for validity. It should return `true` when 
-    # the message is a valid message, `false` otherwise.
-    #
-    # Returns true or false.
-    # Raises NotImplementedError when not implemented (default).
-    def valid?
-      raise NotImplementedError, "#{self.class}#valid? is not implemented."
     end
 
     # Public: Checks the equality. If `other` is an IRC::Message the raw message
