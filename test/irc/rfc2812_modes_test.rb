@@ -32,6 +32,12 @@ test "modes without a parameter" do |klass|
 
   assert_equal modes[:n], true
   assert_equal modes[:t], true
+
+  modes = klass.new msg(":server.com MODE #channel +nt-q")
+
+  assert_equal modes[:n], true
+  assert_equal modes[:t], true
+  assert_equal modes[:q], false
 end
 
 test "modes with a parameter" do |klass|
@@ -39,6 +45,12 @@ test "modes with a parameter" do |klass|
 
   assert_equal modes[:k], "password"
   assert_equal modes[:l], "100"
+
+  modes = klass.new msg(":server.com MODE #channel +kl-q password 100")
+
+  assert_equal modes[:k], "password"
+  assert_equal modes[:l], "100"
+  assert_equal modes[:q], false
 end
 
 test "lists" do |klass|
@@ -49,6 +61,11 @@ test "lists" do |klass|
 
   assert_equal modes[:b], ["*!user@*", "nick!*@*"]
 
+  modes = klass.new msg(":server.com MODE #channel +bb-q *!user@* nick!*@*")
+
+  assert_equal modes[:b], ["*!user@*", "nick!*@*"]
+  assert_equal modes[:q], false
+
   # Ban exception list
   modes = klass.new msg(":server.com 348 banter #channel *!user@*"),
                     msg(":server.com 348 banter #channel nick!*@*"),
@@ -56,6 +73,10 @@ test "lists" do |klass|
 
   assert_equal modes[:e], ["*!user@*", "nick!*@*"]
 
+  modes = klass.new msg(":server.com MODE #channel +ee-q *!user@* nick!*@*")
+
+  assert_equal modes[:e], ["*!user@*", "nick!*@*"]
+  assert_equal modes[:q], false
 
   # Invite exception list
   modes = klass.new msg(":server.com 346 banter #channel *!user@*"),
@@ -63,4 +84,9 @@ test "lists" do |klass|
                     msg(":server.com 347 banter #channel :End of channel invite list")
 
   assert_equal modes[:I], ["*!user@*", "nick!*@*"]
+
+  modes = klass.new msg(":server.com MODE #channel +II-q *!user@* nick!*@*")
+
+  assert_equal modes[:I], ["*!user@*", "nick!*@*"]
+  assert_equal modes[:q], false
 end

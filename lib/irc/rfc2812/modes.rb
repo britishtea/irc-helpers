@@ -6,7 +6,7 @@ module IRC
         @modes = { :b => [], :e => [], :I => [] }
 
         messages.each do |message|
-          method = "parse_#{message.command}"
+          method = "parse_#{message.command}".downcase
 
           if self.respond_to?(method, true)
             self.send(method, message)
@@ -37,9 +37,14 @@ module IRC
         modes      = message.params[2].delete("+").chars.map(&:to_sym)
         parameters = message.params[3..-1]
 
-        modes.zip(parameters) do |mode, parameter|
-          @modes[mode] = parameter.nil? ? true : parameter
-        end
+        set_modes(modes, parameters)
+      end
+
+      def parse_mode(message)
+        modes      = message.params[1][/^\+([^-]*)/, 1].chars.map(&:to_sym)
+        parameters = message.params[2..-1]
+
+        set_modes(modes, parameters)
       end
 
       # Banlist
@@ -55,6 +60,16 @@ module IRC
       # Invitelist
       def parse_346(message)
         @modes[:I] << message.params[2]
+      end
+
+      def set_modes(modes, parameters)
+        modes.zip(parameters) do |mode, parameter|
+          if [:b, :e, :I].include?(mode)
+            @modes[mode] << parameter
+          else
+            @modes[mode] = parameter.nil? ? true : parameter
+          end
+        end
       end
     end
   end
