@@ -12,7 +12,7 @@ module IRC
       # Public: Initializes the ...
       #
       # messages - An Array of IRC::Messages.
-      def initialize(messages)
+      def initialize(*messages)
         @channels = []
         @statuses = {}
 

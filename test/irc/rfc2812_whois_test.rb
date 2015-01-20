@@ -16,7 +16,7 @@ MESSAGES = [
   msg(":prefix 318 x nick :End of WHOIS list\r\n")          # RPL_ENDOFWHOIS
 ]
 
-setup { IRC::RFC2812::Whois.new MESSAGES }
+setup { IRC::RFC2812::Whois.new(*MESSAGES) }
 
 # RPL_WHOISUSER
 
@@ -70,7 +70,7 @@ test "#away? (while away)" do |whois|
 end
 
 test "#away? (while not away)" do |whois|
-  whois = whois.class.new [MESSAGES.last]
+  whois = whois.class.new(MESSAGES.last)
 
   assert_equal whois.away?, false
 end
@@ -82,7 +82,7 @@ test "#operator? (while operator)" do |whois|
 end
 
 test "#operator? (while not operator)" do |whois|
-  whois = whois.class.new [MESSAGES.last]
+  whois = whois.class.new(MESSAGES.last)
 
   assert_equal whois.operator?, false
 end
