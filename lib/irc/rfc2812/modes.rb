@@ -31,6 +31,10 @@ module IRC
         @modes.fetch(mode.to_sym, false)
       end
 
+      def to_hash
+        @modes.reject { |k,v| v.respond_to?(:empty?) && v.empty? }
+      end
+
     private
 
       def parse_324(message)

@@ -10,6 +10,10 @@ setup do
   IRC::RFC2812::Modes
 end
 
+test "#to_hash" do |klass|
+  assert_equal klass.new.to_hash, {}
+end
+
 test "default values" do |klass|
   modes = klass.new msg(":server.com 324 banter #channel +")
 
