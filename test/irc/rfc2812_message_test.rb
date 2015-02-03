@@ -3,6 +3,10 @@ require "irc/rfc2812/message"
 
 setup { IRC::RFC2812::Message.new ":prefix COMMAND para meter :the trail\r\n" }
 
+test "#prefix returns an IRC::RFC2812::Prefix" do |message|
+  assert_equal message.prefix.class, IRC::RFC2812::Prefix
+end
+
 test ".parse is implemented" do |message|
   assert_equal message.class.parse("PING").class, Array
 end

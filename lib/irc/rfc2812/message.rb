@@ -26,6 +26,10 @@ module IRC
 
       # Internal: A range of error reply codes.
       ERROR_REPLY_RANGE = :"400"...:"599"
+
+      def wrap_prefix(prefix)
+        Prefix.new(prefix)
+      end
     end
   end
 end

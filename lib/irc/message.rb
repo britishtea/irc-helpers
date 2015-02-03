@@ -1,3 +1,5 @@
+require "irc/rfc2812/prefix"
+
 module IRC
   # Public: Represents a Message. This class is intended to be subclassed. Its
   # `.parse` and `#valid?` methods are not implemented and should be redefined.
@@ -30,7 +32,7 @@ module IRC
       parsed = self.class.parse raw
 
       @raw     = raw
-      @prefix  = parsed[0] # TODO: Maybe store a Prefix. But how to know which one?
+      @prefix  = wrap_prefix(parsed[0]) unless parsed[0].nil?
       @command = String(parsed[1]).downcase.to_sym
       @params  = parsed[2]
       @trail   = parsed[3]
@@ -130,6 +132,12 @@ module IRC
       end
 
       return true
+    end
+
+    # Internal: Called from initialize, to wrap the prefix of a message in an
+    # object. See IRC::RFC2812::Message#wrap_prefix for an example.
+    def wrap_prefix(prefix)
+      prefix
     end
   end
 end
