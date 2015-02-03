@@ -1,22 +1,7 @@
 require_relative "../test_helper"
 require "irc/rfc2812/commands"
 
-test "module as receiver" do
-  mod = IRC::RFC2812::Commands
-
-  assert mod.respond_to? :privmsg
-  assert mod.respond_to? :raw
-
-  privmsg = mod.privmsg("#channel", "message")
-  assert_equal privmsg, "PRIVMSG #channel :message\r\n"
-end
-
-setup do
-  Object.new.tap do |obj| 
-    obj.extend IRC::RFC2812::Commands
-    def obj.raw(message); message; end
-  end
-end
+setup { IRC::RFC2812::Commands }
 
 # Connection registration
 
@@ -306,4 +291,16 @@ end
 test "#ison" do |c|
   assert_equal c.ison("Wiz"), "ISON Wiz\r\n"
   assert_equal c.ison(["Wiz", "x", "y"]), "ISON Wiz x y\r\n"
+end
+
+test "as a mixin" do
+  klass = Class.new do
+    include IRC::RFC2812::Commands
+
+    def raw(*args); $test = true; end
+  end
+
+  klass.new.privmsg "#channel", "message"
+
+  assert_equal $test, true
 end
